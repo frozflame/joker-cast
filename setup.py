@@ -37,7 +37,7 @@ config = {
     'version': getversion(),
     'description': '' + description,
     'keywords': '',
-    'url': "",
+    'url': "https://github.com/frozflame/joker-cast",
     'author': 'frozflame',
     'author_email': 'frozflame@outlook.com',
     'license': "GNU General Public License (GPL)",
