@@ -11,30 +11,34 @@ from setuptools import setup, find_packages
 # DO NOT import your package from your setup.py
 
 
-def readfile(filename):
-    with open(filename) as f:
-        return f.read()
-
-
-# change this
 package_name = 'cast'
 description = 'Some type conversion utilities'
 
 
-def getversion():
+def read(filename):
+    with open(filename) as f:
+        return f.read()
+
+
+def version_find():
     root = os.path.dirname(__file__)
-    path = os.path.join(root, 'joker/{}/VERSION'.format(package_name))
-    with open(path) as version_file:
-        version = version_file.read().strip()
-        regex = re.compile(r'^\d+\.\d+\.\d+$')
-        if not regex.match(version):
-            raise ValueError('VERSION file is corrupted')
-        return version
+    path = os.path.join(root, 'joker/{}/__init__.py'.format(package_name))
+    regex = re.compile(
+        r'''^__version__\s*=\s*('|"|'{3}|"{3})([.\w]+)\1\s*(#|$)''')
+    with open(path) as fin:
+        for line in fin:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            mat = regex.match(line)
+            if mat:
+                return mat.groups()[1]
+    raise ValueError('__version__ definition not found')
 
 
 config = {
     'name': "joker-" + package_name,
-    'version': getversion(),
+    'version': version_find(),
     'description': '' + description,
     'keywords': '',
     'url': "https://github.com/frozflame/joker-cast",
@@ -44,7 +48,7 @@ config = {
     'packages': find_packages(exclude=['test_*']),
     'namespace_packages': ["joker"],
     'zip_safe': False,
-    'install_requires': readfile("requirements.txt"),
+    'install_requires': read("requirements.txt"),
     'classifiers': [
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
