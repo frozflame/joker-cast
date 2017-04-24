@@ -8,6 +8,9 @@ import collections
 import six
 
 
+__version__ = '0.0.1'
+
+
 def regular_cast(original, *attempts):
     for attem in attempts:
         if not callable(attem):
