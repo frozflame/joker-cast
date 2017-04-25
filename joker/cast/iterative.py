@@ -2,9 +2,12 @@
 # coding: utf-8
 
 from __future__ import division, print_function
+
 import itertools
 from collections import deque
 from itertools import chain, combinations
+
+from six import moves as six_moves
 
 
 # numpy is slow to load, don't add here
@@ -89,3 +92,20 @@ def window_sum(wsize, numbers):
         queue.append(num)
         if len(queue) >= wsize:
             yield sum(queue)
+
+
+_void = object()
+
+
+def alternate(*iterables, fill=_void):
+    """
+    >>> ''.join(list(alternate('ABCD', 'abcde')))
+    'AaBbCcDde'
+    >>> ''.join(list(alternate('ABCD', 'abcde', fill='_')))
+    'AaBbCcDd_e' 
+    """
+    zip_longest = six_moves.zip_longest
+    alt = itertools.chain(*zip_longest(*iterables, fillvalue=fill))
+    for item in alt:
+        if item is not _void:
+            yield item
