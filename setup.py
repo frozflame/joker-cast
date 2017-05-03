@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 
 
 package_name = 'cast'
-description = 'Some type conversion utilities'
+description = 'Types and conversions'
 
 
 def read(filename):
