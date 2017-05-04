@@ -7,7 +7,10 @@ import itertools
 from collections import deque
 from itertools import chain, combinations
 
+import six
 from six import moves as six_moves
+
+from joker.cast.numeric import ceil
 
 
 # numpy is slow to load, don't add here
@@ -109,3 +112,81 @@ def alternate(*iterables, fill=_void):
     for item in alt:
         if item is not _void:
             yield item
+
+
+class Circular(object):
+    """
+    >>> c = Circular([0, 1, 2, 3, 4]) 
+    >>> list(c[-1:5])
+    [4, 0, 1, 2, 3, 4]
+    """
+    def __init__(self, iterable):
+        self._items = list(iterable)
+        assert self._items
+
+    def __repr__(self):
+        c = self.__class__.__name__
+        return '{}({})'.format(c, self._items)
+
+    def ix_turn(self, ix):
+        if ix is None:
+            return
+        return len(self._items) - 1 - ix
+
+    def ix_shift(self, *indexes):
+        m = min(i for i in indexes if i is not None)
+        if m >= 0:
+            return indexes
+        n = len(self._items)
+        shift = ceil(-1. * m / n) * n
+        new_indexes = []
+        for ix in indexes:
+            if ix is None:
+                new_indexes.append(None)
+            else:
+                new_indexes.append(ix + shift)
+        return tuple(new_indexes)
+
+    def standardize(self, slc):
+        """
+        :param slc: a slice instance 
+        :return: (start, stop, step)  # a tuple  
+        """
+        assert isinstance(slc, slice)
+        if slc.step is None or slc.step >= 0:
+            return self.ix_shift(slc.start, slc.stop, slc.step)
+        return self.ix_shift(
+            self.ix_turn(slc.start),
+            self.ix_turn(slc.stop),
+            -slc.step)
+
+    def __getitem__(self, key):
+        n = len(self._items)
+        if isinstance(key, six.integer_types):
+            return self._items[key % n]
+
+        if isinstance(key, slice):
+            start, stop, step = self.standardize(key)
+            if key.step and key.step < 0:
+                c_items = itertools.cycle(self._items[::-1])
+            else:
+                c_items = itertools.cycle(self._items)
+            return itertools.islice(c_items, start, stop, step)
+
+
+class CircularString(object):
+    """
+    >>> cs = CircularString('0123456789')
+    >>> cs[-1:12]
+    '9012345678901'
+    """
+    def __init__(self, string):
+        self._string = string
+        self._circular = Circular(string)
+
+    def __repr__(self):
+        c = self.__class__.__name__
+        return '{}({})'.format(c, self._string)
+
+    def __getitem__(self, key):
+        return ''.join(list(self._circular[key]))
