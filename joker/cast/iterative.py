@@ -5,6 +5,7 @@ from __future__ import division, print_function
 
 import itertools
 from collections import deque
+from functools import wraps
 from itertools import chain, combinations
 
 import six
@@ -190,3 +191,42 @@ class CircularString(object):
 
     def __getitem__(self, key):
         return ''.join(list(self._circular[key]))
+
+
+# TODO: suport negative index (castfunc=-1 to get last item)
+def castable(func):
+    """
+    >>> @castable
+    ... def myfunc(*args):
+    ...     for i in range(*args):
+    ...         yield i
+    ...
+    >>> myfunc(12, castfunc=tuple)
+    (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+    >>> myfunc(0, 12, 2, castfunc=2)
+    (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+   
+    Purely syntax sugar,
+    to make interactive use of some functions easier.
+    Cast a generator function to list, set, or select n-th item, etc.
+
+        myfunc(..., castfunc=list)   <=>  list(myfunc(...))
+        myfunc(..., castfunc=1)      <=>  list(myfunc(...))[1]
+    """
+    @wraps(func)
+    def _decorated_func(*args, **kwargs):
+        castfunc = None
+        if 'castfunc' in kwargs:
+            castfunc = kwargs['castfunc']
+            del kwargs['castfunc']
+
+            # shortcut to pick up nth record
+            if isinstance(castfunc, int):
+                n = castfunc
+                castfunc = lambda result: next(itertools.islice(result, n, None))
+
+        result = func(*args, **kwargs)
+        if castfunc:
+            result = castfunc(result)
+        return result
+    return _decorated_func
