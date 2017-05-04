@@ -34,3 +34,20 @@ class DefaultOrderedDict(collections.OrderedDict):
             args = self.default_factory,
         return type(self), args, None, None, self.items()
 
+
+class RecursiveDefaultDict(collections.defaultdict):
+    def __init__(self, **kwargs):
+        super(RecursiveDefaultDict, self).__init__(self.__class__, **kwargs)
+
+
+class RecursiveCounter(RecursiveDefaultDict):
+    def total(self, as_string=False):
+        s = 0
+        for v in self.values():
+            if isinstance(v, six.integer_types) or isinstance(v, float):
+                s += v
+            elif isinstance(v, RecursiveCounter):
+                s += v.total()
+        if as_string:
+            s = str(s)
+        return s
