@@ -12,17 +12,6 @@ def _str_trans(s):
     return s.replace('\n', r'\n').replace('\r', r'\r')
 
 
-unicode = str
-
-
-def recursive_sort(structure, key=None):
-    if isinstance(structure, (list, tuple, set, frozenset)):
-        return [recursive_sort(x, key) for x in sorted(structure, key=key)]
-    elif isinstance(structure, dict):
-        return {k: recursive_sort(v, key) for k, v in structure.items()}
-    return deepcopy(structure)
-
-
 # TODO: test this func
 def minify(obj, inplace=False, listlimit=1, strlimit=200):
     """
@@ -52,7 +41,7 @@ def minify(obj, inplace=False, listlimit=1, strlimit=200):
         if tail is not None:
             obj.append(tail)
 
-    elif isinstance(obj, (six.binary_type, six.text_type)):
+    elif isinstance(obj, six.string_types):
         if isinstance(obj, six.binary_type):
             obj = obj.decode('utf-8')
         if len(obj) > strlimit:
