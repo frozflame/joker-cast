@@ -2,11 +2,14 @@
 # coding: utf-8
 
 from __future__ import division, print_function
-import time
+
 import datetime
-import sys
-import six
 import re
+import sys
+import time
+
+import six
+
 from joker.cast import want_unicode
 
 
