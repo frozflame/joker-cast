@@ -3,6 +3,8 @@
 
 from __future__ import division, print_function
 import inspect
+import functools
+import itertools
 
 
 def fmt_class_path(obj):
@@ -169,7 +171,7 @@ def castable(func):
         myfunc(..., castfunc=list)   <=>  list(myfunc(...))
         myfunc(..., castfunc=1)      <=>  list(myfunc(...))[1]
     """
-    @wraps(func)
+    @functools.wraps(func)
     def _decorated_func(*args, **kwargs):
         castfunc = None
         if 'castfunc' in kwargs:
@@ -179,7 +181,7 @@ def castable(func):
             # shortcut to pick up nth record
             if isinstance(castfunc, int):
                 n = castfunc
-                castfunc = lambda result: next(itertools.islice(result, n, None))
+                castfunc = lambda r: next(itertools.islice(r, n, None))
 
         result = func(*args, **kwargs)
         if castfunc:
