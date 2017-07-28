@@ -113,6 +113,9 @@ _always_return_false = ConstantCallable(False)
 
 
 class Void(object):
+    """
+    Act as 0, False, '', [] 
+    """
     __bool__ = _always_return_false
     __nonzero__ = _always_return_false
     __add__ = _first_arg
