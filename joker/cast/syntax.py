@@ -10,7 +10,9 @@ import itertools
 
 def adaptive_call(entry):
     """
-    >>> adaptive_call()
+    >>> import sys
+    >>> entry = [print, ['a', 'b'], {'file': sys.stderr}]
+    >>> adaptive_call(entry)
 
     :param entry: an iterable or a callable
     :return:
@@ -18,21 +20,22 @@ def adaptive_call(entry):
     pargs = []
     kwargs = dict()
     if callable(entry):
-        entry = [entry]
-    try:
-        func = next(entry)
-    except:
-        raise ValueError('empty entry')
-    if not callable(func):
-        raise ValueError('first item in the entry must be a callable')
-    for o in entry:
-        if isinstance(o, (list, tuple)):
-            pargs.extend(o)
-        elif isinstance(o, dict):
-            kwargs.update(o)
+        return entry()
+
+    items = list(entry)
+    if not items:
+        return items
+    if not callable(items[0]):
+        raise TypeError('first item of entry must be a callable')
+
+    for x in items[1:]:
+        if isinstance(x, (list, tuple)):
+            pargs.extend(x)
+        elif isinstance(x, dict):
+            kwargs.update(x)
         else:
-            raise TypeError('params must be tuple, list or dict')
-    func(*pargs, **kwargs)
+            raise TypeError('params must be a tuple, list or dict')
+    return items[0](*pargs, **kwargs)
 
 
 def format_class_path(obj):
