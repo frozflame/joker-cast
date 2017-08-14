@@ -2,12 +2,40 @@
 # coding: utf-8
 
 from __future__ import division, print_function
-import inspect
+
 import functools
+import inspect
 import itertools
 
 
-def fmt_class_path(obj):
+def adaptive_call(entry):
+    """
+    >>> adaptive_call()
+
+    :param entry: an iterable or a callable
+    :return:
+    """
+    pargs = []
+    kwargs = dict()
+    if callable(entry):
+        entry = [entry]
+    try:
+        func = next(entry)
+    except:
+        raise ValueError('empty entry')
+    if not callable(func):
+        raise ValueError('first item in the entry must be a callable')
+    for o in entry:
+        if isinstance(o, (list, tuple)):
+            pargs.extend(o)
+        elif isinstance(o, dict):
+            kwargs.update(o)
+        else:
+            raise TypeError('params must be tuple, list or dict')
+    func(*pargs, **kwargs)
+
+
+def format_class_path(obj):
     if isinstance(obj, type):
         klass = obj
     else:
@@ -21,25 +49,20 @@ def fmt_class_path(obj):
     return name
 
 
-def deprecated_fmt_class_path(klass):
-    if not isinstance(klass, type):
-        raise TypeError('must be a new-style class')
-    if klass.__module__ == '__main__':
-        prefix = ''
-    else:
-        prefix = klass.__module__ + '.'
-    return prefix + klass.__name__
-
-
-def fmt_function_path(func):
+def format_function_path(func):
     if not inspect.ismethod(func):
         mod = getattr(func, '__module__', None)
         if mod is None:
             return func.__qualname__
         else:
             return '{}.{}'.format(mod, func.__qualname__)
-    klass_path = fmt_class_path(func.__self__)
+    klass_path = format_class_path(func.__self__)
     return '{}.{}'.format(klass_path, func.__name__)
+
+
+# compatibility
+fmt_class_path = format_class_path
+fmt_function_path = format_function_path
 
 
 def instanciate(cls):
