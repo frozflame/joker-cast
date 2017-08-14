@@ -16,13 +16,13 @@ class Event(syntax.AttrEchoer):
 
 def test_path_formatters():
     vals = [
-        syntax.fmt_class_path(dict),
-        syntax.fmt_class_path(Event),
-        syntax.fmt_class_path(JSONEncoderExtended),
-        syntax.fmt_function_path(dict.pop),
-        syntax.fmt_function_path(JSONEncoderExtended.default),
-        syntax.fmt_function_path(human_json_dumps),
-        syntax.fmt_function_path(lambda: 1),
+        syntax.format_class_path(dict),
+        syntax.format_class_path(Event),
+        syntax.format_class_path(JSONEncoderExtended),
+        syntax.format_function_path(dict.pop),
+        syntax.format_function_path(JSONEncoderExtended.default),
+        syntax.format_function_path(human_json_dumps),
+        syntax.format_function_path(lambda: 1),
     ]
     for v in vals:
         print(v)
