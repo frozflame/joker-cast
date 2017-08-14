@@ -8,7 +8,7 @@ import collections
 import six
 
 
-__version__ = '0.0.6'
+__version__ = '0.0.7'
 
 
 def regular_cast(original, *attempts):
