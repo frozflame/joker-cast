@@ -1,6 +1,8 @@
+Changes of joker-cast
+=====================
 
-Changes
-=======
+#### 0.0.8
+* add .locational
 
 #### 0.0.7
 * add syntax.adaptive_call
