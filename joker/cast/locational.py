@@ -38,6 +38,13 @@ def under_joker_dir(*paths):
     return os.path.join(p, *paths)
 
 
+def make_joker_dir():
+    # silently return if userdir_path exists as a dir
+    d = under_joker_dir()
+    if not os.path.isdir(d):
+        os.mkdir(d, int('700', 8))
+
+
 def under_package_dir(package, *paths):
     p_dir = os.path.dirname(package.__file__)
     return os.path.join(p_dir, *paths)
