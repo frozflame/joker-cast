@@ -30,6 +30,14 @@ def under_home_dir(*paths):
     return os.path.join(homedir, *paths)
 
 
+def under_joker_dir(*paths):
+    p = under_home_dir('.joker')
+    p = os.environ.get('JOKER_HOMEDIR', p)
+    p = os.path.expanduser(p)
+    p = os.path.abspath(p)
+    return os.path.join(p, *paths)
+
+
 def under_package_dir(package, *paths):
     p_dir = os.path.dirname(package.__file__)
     return os.path.join(p_dir, *paths)
