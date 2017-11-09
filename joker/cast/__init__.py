@@ -68,3 +68,9 @@ def namedtuple_to_dict(nt):
     return collections.OrderedDict(zip(fields, nt))
 
 
+def represent(obj, fields):
+    c = obj.__class__.__name__
+    parts = ('{}={}'.format(k, repr(getattr(obj, k))) for k in fields)
+    s = ', '.join(parts)
+    return '<{}({}) at {}>'.format(c, s, hex(id(obj)))
+
