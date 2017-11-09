@@ -18,7 +18,7 @@ def keep_file_extension(old_path, new_path):
 
 def url_to_filename(url):
     # http://stackoverflow.com/questions/295135/
-    name = re.sub(r'[^\w\s-_.]+', '-', url)
+    name = re.sub(r'[^\w\s_.-]+', '-', url)
     return re.sub(r'^{http|https|ftp}', '', name)
 
 
