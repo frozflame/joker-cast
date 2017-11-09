@@ -90,16 +90,18 @@ def window_sum(wsize, numbers):
             yield sum(queue)
 
 
-_void = object()
-
-
-def alternate(*iterables, fill=_void):
+def alternate(*iterables, **kwargs):
     """
+    :param iterables:
+    :parameter fill:
+
     >>> ''.join(list(alternate('ABCD', 'abcde')))
     'AaBbCcDde'
     >>> ''.join(list(alternate('ABCD', 'abcde', fill='_')))
     'AaBbCcDd_e' 
     """
+    _void = object()
+    fill = kwargs.get('fill', _void)
     zip_longest = six_moves.zip_longest
     alt = itertools.chain(*zip_longest(*iterables, fillvalue=fill))
     for item in alt:
@@ -107,3 +109,9 @@ def alternate(*iterables, fill=_void):
             yield item
 
 
+def flatten(tup):
+    if len(tup) == 1:
+        return tup[0]
+    if len(tup) == 0:
+        return None
+    return tup
