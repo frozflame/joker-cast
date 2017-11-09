@@ -23,6 +23,14 @@ def overlap_size(v1, v2, u1, u2):
     return alen + blen - wide
 
 
+def grid_align(v, unitsize):
+    unitsize = float(unitsize)
+    v = round(v / unitsize) * unitsize
+    if round(unitsize) == unitsize:
+        return int(v)
+    return v
+
+
 def metric_prefix(number):
     """
     >>> metric_prefix(10 ** 11) 
