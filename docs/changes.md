@@ -1,6 +1,9 @@
 Changes of joker-cast
 =====================
 
+#### 0.0.12
+* add want_str()
+
 #### 0.0.11
 * add grid_align(), represent(), flattern()
 * fix url_to_filename() and alternate()

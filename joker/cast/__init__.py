@@ -8,7 +8,7 @@ import collections
 import six
 
 
-__version__ = '0.0.11'
+__version__ = '0.0.12'
 
 
 def regular_cast(original, *attempts):
@@ -59,6 +59,17 @@ def want_unicode(s, **kwargs):
     :return: 
     """
     if not isinstance(s, six.text_type):
+        return s.decode(**kwargs)
+    return s
+
+
+def want_str(s, **kwargs):
+    """
+    :param s:
+    :param kwargs: key word arguments passed to s.decode(..)
+    :return:
+    """
+    if not isinstance(s, str):
         return s.decode(**kwargs)
     return s
 
