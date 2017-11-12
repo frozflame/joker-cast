@@ -110,8 +110,9 @@ def alternate(*iterables, **kwargs):
 
 
 def flatten(tup):
-    if len(tup) == 1:
-        return tup[0]
-    if len(tup) == 0:
-        return None
+    if isinstance(tup, (tuple, list)):
+        if len(tup) == 1:
+            return tup[0]
+        if len(tup) == 0:
+            return None
     return tup
