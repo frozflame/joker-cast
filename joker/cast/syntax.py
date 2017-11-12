@@ -8,6 +8,10 @@ import inspect
 import itertools
 
 
+def noop(*args, **kwargs):
+    pass
+
+
 def adaptive_call(entry):
     """
     >>> import sys
