@@ -116,3 +116,9 @@ def flatten(tup):
         if len(tup) == 0:
             return None
     return tup
+
+
+def unflatten(obj):
+    if isinstance(obj, (tuple, list)):
+        return obj
+    return obj,

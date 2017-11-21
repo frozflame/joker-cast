@@ -8,7 +8,7 @@ import collections
 import six
 
 
-__version__ = '0.0.12'
+__version__ = '0.0.13'
 
 
 def regular_cast(original, *attempts):
@@ -79,9 +79,16 @@ def namedtuple_to_dict(nt):
     return collections.OrderedDict(zip(fields, nt))
 
 
-def represent(obj, fields):
+def represent(obj, params):
+    """
+    :param obj:
+    :param params: a dict or list
+    """
     c = obj.__class__.__name__
-    parts = ('{}={}'.format(k, repr(getattr(obj, k))) for k in fields)
+    if isinstance(params, dict):
+        parts = ('{}={}'.format(k, repr(v)) for k, v in params.items())
+    else:
+        parts = ('{}={}'.format(k, repr(getattr(obj, k))) for k in params)
     s = ', '.join(parts)
     return '<{}({}) at {}>'.format(c, s, hex(id(obj)))
 
