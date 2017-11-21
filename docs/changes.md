@@ -1,6 +1,9 @@
 Changes of joker-cast
 =====================
 
+#### 0.0.13
+* represent() supports dict as argument
+
 #### 0.0.12
 * add want_str()
 
