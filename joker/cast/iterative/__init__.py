@@ -10,6 +10,50 @@ from itertools import chain, combinations
 from six import moves as six_moves
 
 
+def flatten(tup):
+    """
+    >>> flatten([100])
+    100
+    >>> flatten([100, 200])
+    [100, 200]
+    :param tup: a tuple or list
+    """
+    if isinstance(tup, (tuple, list)):
+        if len(tup) == 1:
+            return tup[0]
+        if len(tup) == 0:
+            return None
+    return tup
+
+
+def unflatten(obj):
+    """
+    >>> unflatten(100)
+    (100,)
+    >>> unflatten(tuple([100]))
+    (100,)
+    :param obj:
+    :return: a tuple or list
+    """
+    if isinstance(obj, (tuple, list)):
+        return obj
+    return obj,
+
+
+def reusable(records):
+    """
+    >>> reusable(i for i in range(5))
+    [0, 1, 2, 3, 4]
+    >>> reusable([0, 1, 2, 3, 4])
+    [0, 1, 2, 3, 4]
+    :param records: an iterable
+    :return: a list or tuple
+    """
+    if isinstance(records, (list, tuple)):
+        return records
+    return list(records)
+
+
 def chunkwize(chunksize, iterable):
     """
     >>> list(chunkwize(5, range(14)))
@@ -109,16 +153,3 @@ def alternate(*iterables, **kwargs):
             yield item
 
 
-def flatten(tup):
-    if isinstance(tup, (tuple, list)):
-        if len(tup) == 1:
-            return tup[0]
-        if len(tup) == 0:
-            return None
-    return tup
-
-
-def unflatten(obj):
-    if isinstance(obj, (tuple, list)):
-        return obj
-    return obj,
