@@ -8,7 +8,7 @@ import inspect
 import itertools
 
 
-def noop(*args, **kwargs):
+def noop(*_, **__):
     pass
 
 
