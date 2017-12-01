@@ -1,8 +1,8 @@
 #!/user/bin/env python3
 # coding: utf-8
 from copy import deepcopy
-import six
 
+import six
 
 tail_for_str = '... +{} trailing characters'
 tail_for_arr = '... +{} trailing objects'
