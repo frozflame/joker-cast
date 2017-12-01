@@ -1,6 +1,11 @@
 Changes of joker-cast
 =====================
 
+#### 0.0.14
+* joker.cast.nested.tree
+* reusable(), flatten, unflatten
+
+
 #### 0.0.13
 * represent() supports dict as argument
 
