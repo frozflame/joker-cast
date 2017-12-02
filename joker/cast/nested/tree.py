@@ -13,6 +13,11 @@ def get_parent_from_ascendants(ascendants):
 
 
 def compact_tree_assemble(records):
+    """
+    flat -> nested
+    :param records: a list of dicts
+    :return: (tree, tmap), both are dicts
+    """
     records = reusable(records)
     tmap = {rec['id']: dict() for rec in records}
     tree = {}
@@ -26,6 +31,12 @@ def compact_tree_assemble(records):
 
 
 def standard_tree_assemble(records, setnone=False):
+    """
+    flat -> nested
+    :param records: a list of dicts
+    :param setnone: bool, default False
+    :return: (tree, tmap), both are dicts
+    """
     records = reusable(records)
     ids = [rec['id'] for rec in records]
     tmap = {i: {'id': i, 'children': list()} for i in ids}
@@ -44,6 +55,11 @@ def standard_tree_assemble(records, setnone=False):
 
 
 def standard_tree_dissemble(tree):
+    """
+    nested structure -> flat records
+    :param tree: a nested dict
+    :return: a list of dicts
+    """
     tree = deepcopy(tree)
     tree['ascendants'] = []
     stack = [tree]
@@ -61,6 +77,11 @@ def standard_tree_dissemble(tree):
 
 
 def compact_tree_disemble(tree):
+    """
+    nested -> flat
+    :param tree: a nested dict
+    :return: a list of dicts
+    """
     tree = deepcopy(tree)
     # tree['ascendants'] = []
     stack = [(i, list(), node) for (i, node) in tree.items()]
@@ -72,4 +93,3 @@ def compact_tree_disemble(tree):
         for k, child in node.items():
             stack.append((k, ascendants, child))
     return collect
-
