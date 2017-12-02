@@ -95,6 +95,7 @@ def represent(obj, params):
 
 
 def indented_json_print(o, *args, **kwargs):
+    # https://stackoverflow.com/a/12888081/2925169
     decode = codecs.getdecoder('unicode_escape')
     outstr = json.dumps(o, indent=4, sort_keys=True)
     print(decode(outstr)[0], *args, **kwargs)
