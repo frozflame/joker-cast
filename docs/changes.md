@@ -1,6 +1,11 @@
 Changes of joker-cast
 =====================
 
+
+#### 0.0.15
+* indented_json_print
+
+
 #### 0.0.14
 * joker.cast.nested.tree
 * reusable(), flatten, unflatten
@@ -9,13 +14,16 @@ Changes of joker-cast
 #### 0.0.13
 * represent() supports dict as argument
 
+
 #### 0.0.12
 * add want_str()
+
 
 #### 0.0.11
 * add grid_align(), represent(), flattern()
 * fix url_to_filename() and alternate()
 * require joker
+
 
 #### 0.0.10
 * add locational.make_joker_kdir

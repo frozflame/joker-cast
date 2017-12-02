@@ -3,10 +3,11 @@
 
 from __future__ import division, print_function
 
+import codecs
 import collections
+import json
 
 import six
-
 
 __version__ = '0.0.14'
 
@@ -92,3 +93,8 @@ def represent(obj, params):
     s = ', '.join(parts)
     return '<{}({}) at {}>'.format(c, s, hex(id(obj)))
 
+
+def indented_json_print(o, *args, **kwargs):
+    decode = codecs.getdecoder('unicode_escape')
+    outstr = json.dumps(o, indent=4, sort_keys=True)
+    print(decode(outstr)[0], *args, **kwargs)
