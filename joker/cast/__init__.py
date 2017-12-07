@@ -9,7 +9,7 @@ import json
 
 import six
 
-__version__ = '0.0.14'
+__version__ = '0.0.15'
 
 
 def regular_cast(original, *attempts):
