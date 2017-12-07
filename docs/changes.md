@@ -4,6 +4,7 @@ Changes of joker-cast
 
 #### 0.0.15
 * indented_json_print
+* compact_tree_disemble -> compact_tree_dissemble
 
 
 #### 0.0.14
