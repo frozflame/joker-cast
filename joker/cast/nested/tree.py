@@ -72,11 +72,14 @@ def standard_tree_dissemble(tree):
             child['ascendants'] = ascendants
             stack.append(child)
     for node in collect:
-        del node['children']
+        try:
+            del node['children']
+        except KeyError:
+            pass
     return collect
 
 
-def compact_tree_disemble(tree):
+def compact_tree_dissemble(tree):
     """
     nested -> flat
     :param tree: a nested dict
@@ -90,6 +93,8 @@ def compact_tree_disemble(tree):
         i, ascendants, node = stack.pop()
         collect.append({'id': i, 'ascendants': ascendants})
         ascendants = ascendants + [i]
+        if node is None:
+            continue
         for k, child in node.items():
             stack.append((k, ascendants, child))
     return collect

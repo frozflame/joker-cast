@@ -8,7 +8,7 @@ import json
 from joker.cast.nested.tree import (
     get_parent_from_ascendants,
     compact_tree_assemble,
-    compact_tree_disemble,
+    compact_tree_dissemble,
     standard_tree_dissemble,
     standard_tree_assemble,
 )
@@ -61,7 +61,7 @@ def test_standard_tree_assemble():
 
 def test_compact_tree_assemble():
     tree, tmap = compact_tree_assemble(testdata)
-    dissembled = compact_tree_disemble(tree)
+    dissembled = compact_tree_dissemble(tree)
     for rec in dissembled:
         rec['parent'] = get_parent_from_ascendants(rec['ascendants'])
 
