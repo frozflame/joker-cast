@@ -1,6 +1,9 @@
 Changes of joker-cast
 =====================
 
+#### 0.0.16
+* locational: load_modules_under_package
+
 
 #### 0.0.15
 * indented_json_print

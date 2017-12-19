@@ -18,6 +18,8 @@ def under_package_dir(package, *paths):
 
 def load_modules_under_package(package, module_names=None):
     import importlib
+    if isinstance(package, str):
+        package = importlib.import_module(package)
     prefix = package.__name__
     match = re.compile(r'^[^_].*\.pyc?$').match
 
@@ -96,5 +98,3 @@ def validate_ipv6_address(address):
     except socket.error:  # not a valid address
         return False
     return True
-
-
