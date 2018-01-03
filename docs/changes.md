@@ -1,6 +1,11 @@
 Changes of joker-cast
 =====================
 
+#### 0.0.17
+* add seconds_to_hms()
+* add number_split()
+
+
 #### 0.0.16
 * locational: load_modules_under_package
 
