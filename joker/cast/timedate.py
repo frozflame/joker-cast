@@ -13,6 +13,18 @@ import six
 from joker.cast import want_unicode
 
 
+def seconds_to_hms(seconds):
+    """
+    >>> seconds_to_hms(4000)
+    (1, 6, 40)
+    :return:
+    """
+    # https://stackoverflow.com/a/775075/2925169
+    m, s = divmod(seconds, 60)
+    h, m = divmod(m, 60)
+    return h, m, s
+
+
 def eazy_date(x):
     """  
     >>> eazy_date(0)
