@@ -93,6 +93,28 @@ def chunkwize_parallel(chunksize, *sequences):
             raise StopIteration
 
 
+def number_split(intervalsize, iterable):
+    """
+    >>> list(number_split(5, [1, 3, 5, 7]))
+    [[1, 3], [5, 7]]
+
+    :param intervalsize: integer
+    :param iterable: must be asc ordered
+    :return: a list of lists
+    """
+    intervalsize = float(intervalsize)
+    count = 0
+    chunk = list()
+    for num in iterable:
+        idx = int(num / intervalsize)
+        while idx > count:
+            yield chunk
+            chunk = list()
+            count += 1
+        chunk.append(num)
+    yield chunk
+
+
 def all_combinations(iterable):
     """
     >>> list(all_combinations('abcd'))
