@@ -1,6 +1,11 @@
 Changes of joker-cast
 =====================
 
+#### 0.0.18
+* rename number_split() to numseries_segment() with backward compat
+* add nonblank_lines_of()
+
+
 #### 0.0.17
 * add seconds_to_hms()
 * add number_split()

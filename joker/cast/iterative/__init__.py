@@ -93,26 +93,32 @@ def chunkwize_parallel(chunksize, *sequences):
             raise StopIteration
 
 
-def number_split(intervalsize, iterable):
+def numseries_segment(wsize, iterable):
     """
-    >>> list(number_split(5, [1, 3, 5, 7]))
+    >>> list(numseries_segment(5, [1, 3, 5, 7]))
     [[1, 3], [5, 7]]
 
-    :param intervalsize: integer
+    :param wsize: integer
     :param iterable: must be asc ordered
     :return: a list of lists
     """
-    intervalsize = float(intervalsize)
+    wsize = float(wsize)
     count = 0
     chunk = list()
     for num in iterable:
-        idx = int(num / intervalsize)
+        idx = int(num / wsize)
         while idx > count:
             yield chunk
             chunk = list()
             count += 1
         chunk.append(num)
     yield chunk
+
+
+def number_split(intervalsize, iterable):
+    # TODO: remove this at 0.1.0
+    # DEPRECATED!
+    return numseries_segment(intervalsize, iterable)
 
 
 def all_combinations(iterable):
@@ -175,3 +181,10 @@ def alternate(*iterables, **kwargs):
             yield item
 
 
+def nonblank_lines_of(*args, **kwargs):
+    with open(*args, **kwargs) as fin:
+        for line in fin:
+            line = line.strip()
+            if not line:
+                continue
+            yield line
