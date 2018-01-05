@@ -9,15 +9,15 @@ import json
 
 import six
 
-__version__ = '0.0.17'
+__version__ = '0.0.18'
 
 
 def regular_cast(original, *attempts):
-    for attem in attempts:
-        if not callable(attem):
-            return attem
+    for atmpt in attempts:
+        if not callable(atmpt):
+            return atmpt
         try:
-            return attem(original)
+            return atmpt(original)
         except (TypeError, ValueError):
             pass
     return original
