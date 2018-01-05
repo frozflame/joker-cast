@@ -9,7 +9,7 @@ import json
 
 import six
 
-__version__ = '0.0.18'
+__version__ = '0.0.19'
 
 
 def regular_cast(original, *attempts):
@@ -21,6 +21,22 @@ def regular_cast(original, *attempts):
         except (TypeError, ValueError):
             pass
     return original
+
+
+def regular_lookup(obj, *keys):
+    for key in keys:
+        try:
+            return obj[key]
+        except LookupError:
+            pass
+
+
+def regular_attr_lookup(obj, *keys):
+    for key in keys:
+        try:
+            return getattr(obj, key)
+        except AttributeError:
+            pass
 
 
 def smart_cast(value, default):

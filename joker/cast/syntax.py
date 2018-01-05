@@ -57,12 +57,15 @@ def format_class_path(obj):
 
 
 def format_function_path(func):
+    from joker.cast import regular_attr_lookup
     if not inspect.ismethod(func):
         mod = getattr(func, '__module__', None)
+        qualname = regular_attr_lookup(func, '__qualname__', '__name__')
+        qualname = qualname or '<func>'
         if mod is None:
-            return func.__qualname__
+            return qualname
         else:
-            return '{}.{}'.format(mod, func.__qualname__)
+            return '{}.{}'.format(mod, qualname)
     klass_path = format_class_path(func.__self__)
     return '{}.{}'.format(klass_path, func.__name__)
 
@@ -204,6 +207,7 @@ def castable(func):
         myfunc(..., castfunc=list)   <=>  list(myfunc(...))
         myfunc(..., castfunc=1)      <=>  list(myfunc(...))[1]
     """
+
     @functools.wraps(func)
     def _decorated_func(*args, **kwargs):
         castfunc = None
@@ -220,4 +224,5 @@ def castable(func):
         if castfunc:
             result = castfunc(result)
         return result
+
     return _decorated_func
