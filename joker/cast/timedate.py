@@ -25,6 +25,38 @@ def seconds_to_hms(seconds):
     return h, m, s
 
 
+def parse_time_to_seconds(s):
+    """
+    >>> parse_time_to_seconds('2:3')  # 1min 2sec
+    62
+    >>> parse_time_to_seconds('1:1:2')  # 1hour 1min 2sec
+    3662
+    >>> parse_time_to_seconds('1::2')  # 1hour 2sec
+    3602
+    >>> parse_time_to_seconds('1::')  # 1hour
+    3600
+    >>> parse_time_to_seconds('10102')  # 1hour 1min 2sec
+    3662
+    >>> parse_time_to_seconds('200')  # 2min
+    120
+    :param s: a string representing time
+    :return:
+    """
+    if ':' in s:
+        parts = [int(x or 0) for x in s.split(':')]
+        parts.reverse()
+    else:
+        sc = s
+        parts = []
+        for _ in range(3):
+            parts.append(int(sc[-2:] or 0))
+            sc = sc[:-2]
+    seconds = 0
+    for i, x in enumerate(parts):
+        seconds += x * 60 ** i
+    return seconds
+
+
 def eazy_date(x):
     """  
     >>> eazy_date(0)
