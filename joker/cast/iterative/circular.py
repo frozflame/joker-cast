@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from __future__ import division, print_function
+from __future__ import unicode_literals
 
 import itertools
 
 import six
+
 from joker.cast.numeric import ceil
 
 
