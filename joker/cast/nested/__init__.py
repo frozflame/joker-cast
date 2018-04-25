@@ -1,7 +1,6 @@
 #!/user/bin/env python3
 # coding: utf-8
 
-
 from copy import deepcopy
 
 
