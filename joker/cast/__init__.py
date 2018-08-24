@@ -13,6 +13,14 @@ __version__ = '0.0.19'
 
 
 def regular_cast(original, *attempts):
+    """
+    >>> regular_cast('12.3', int, float)
+    12.3
+    >>> regular_cast('12.3a', int, float)
+    '12.3a'
+    >>> regular_cast('12.3a', int, float, 0)
+    0
+    """
     for atmpt in attempts:
         if not callable(atmpt):
             return atmpt
