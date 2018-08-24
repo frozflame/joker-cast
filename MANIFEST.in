@@ -1,2 +1,1 @@
-include joker/cast/VERSION
 include requirements.txt

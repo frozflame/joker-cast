@@ -1,9 +1,14 @@
 Changes of joker-cast
 =====================
 
+#### 0.0.20
+* add parse_time_to_seconds()
+
+
 #### 0.0.19
 * add regular_lookup() and regular_attr_lookup()
 * fix __qualname__ AttributeError in format_function_path()
+
 
 #### 0.0.18
 * rename number_split() to numseries_segment() with backward compat
