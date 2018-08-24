@@ -3,6 +3,7 @@ Changes of joker-cast
 
 #### 0.0.20
 * add parse_time_to_seconds()
+* remove location.keep_file_extension() and url_to_filename()
 
 
 #### 0.0.19
