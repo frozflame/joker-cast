@@ -12,7 +12,7 @@ import six
 
 from joker.cast import want_unicode
 
-_sexagesimal_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX'
+_sexagesimal_chars = '0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY'
 _sexagesimal_remap = {ic[1]: ic[0] for ic in enumerate(_sexagesimal_chars)}
 
 
@@ -20,7 +20,7 @@ def sexagesimal_format(num, precision=0):
     from joker.cast.numeric import numsys_cast
 
     idigits, fdigits = numsys_cast(num, 60, precision)
-    rs = ''.join(_sexagesimal_chars[i] for i in idigits)
+    rs = ''.join(_sexagesimal_chars[i] for i in idigits) or '0'
 
     if isinstance(num, int) and not precision:
         return rs
