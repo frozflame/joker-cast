@@ -6,10 +6,45 @@ from __future__ import unicode_literals
 import math
 
 
+def numsys_cast(num, base, precision=0):
+    if not isinstance(base, int) or base <= 1:
+        raise TypeError('base must be an integer greater than 1')
+
+    integer, fractional = divmod(num, 1)
+    integer = int(integer)
+    integer_digits = []
+    fractional_digits = []
+
+    while integer:
+        integer, digi = divmod(integer, base)
+        integer_digits.append(digi)
+    integer_digits.reverse()
+
+    for _ in range(precision):
+        fractional *= 60
+        digi, fractional = divmod(fractional, 1)
+        fractional_digits.append(int(digi))
+    return integer_digits, fractional_digits
+
+
+def numsys_revcast(base, integer_digits, fractional_digits):
+    integer = 0
+    for ix, digi in enumerate(reversed(integer_digits)):
+        integer += base ** ix * digi
+    if not fractional_digits:
+        return integer
+    fractional = 0.
+    for ix, digi in enumerate(fractional_digits):
+        fractional += (1. / 60) ** (ix + 1) * digi
+    return integer + fractional
+
+
+# deprecated
 def floor(number):
     return int(math.floor(number))
 
 
+# deprecated
 def ceil(number):
     return int(math.ceil(number))
 

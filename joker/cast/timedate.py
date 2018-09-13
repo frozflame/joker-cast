@@ -12,6 +12,33 @@ import six
 
 from joker.cast import want_unicode
 
+_sexagesimal_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX'
+_sexagesimal_remap = {ic[1]: ic[0] for ic in enumerate(_sexagesimal_chars)}
+
+
+def sexagesimal_format(num, precision=0):
+    from joker.cast.numeric import numsys_cast
+
+    idigits, fdigits = numsys_cast(num, 60, precision)
+    rs = ''.join(_sexagesimal_chars[i] for i in idigits)
+
+    if isinstance(num, int) and not precision:
+        return rs
+    return rs + '.' + ''.join(_sexagesimal_chars[i] for i in fdigits)
+
+
+def sexagesimal_parse(numstr):
+    from joker.cast.numeric import numsys_revcast
+
+    if '.' not in numstr:
+        digits = [_sexagesimal_remap[c] for c in numstr]
+        return numsys_revcast(60, digits, [])
+
+    parts = numstr.split('.', 1)
+    idigits = [_sexagesimal_remap[c] for c in parts[0]]
+    fdigits = [_sexagesimal_remap[c] for c in parts[1]]
+    return numsys_revcast(60, idigits, fdigits or [0])
+
 
 def seconds_to_hms(seconds):
     """
@@ -235,4 +262,3 @@ class TimeSlicer(TimeMachine):
         delta = dt - self.EPOCH
         # use .total_seconds to be compat with python 2.x
         return int(delta.total_seconds() / self._ts_delta.total_seconds())
-
