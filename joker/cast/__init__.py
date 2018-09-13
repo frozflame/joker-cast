@@ -3,10 +3,6 @@
 
 from __future__ import unicode_literals, print_function
 
-import codecs
-import collections
-import json
-
 import six
 
 __version__ = '0.0.20'
@@ -100,8 +96,9 @@ def want_str(s, **kwargs):
 
 
 def namedtuple_to_dict(nt):
+    from collections import OrderedDict
     fields = getattr(nt, '_fields')
-    return collections.OrderedDict(zip(fields, nt))
+    return OrderedDict(zip(fields, nt))
 
 
 def represent(obj, params):
@@ -119,7 +116,10 @@ def represent(obj, params):
 
 
 def indented_json_print(o, *args, **kwargs):
+    import codecs
+    import json
     # https://stackoverflow.com/a/12888081/2925169
-    decode = codecs.getdecoder('unicode_escape')
-    outstr = json.dumps(o, indent=4, sort_keys=True)
-    print(decode(outstr)[0], *args, **kwargs)
+    decoder = codecs.getdecoder('unicode_escape')
+    jsonencoder = kwargs.pop('cls', None)
+    s = json.dumps(o, indent=4, sort_keys=True, cls=jsonencoder)
+    print(decoder(s)[0], *args, **kwargs)
