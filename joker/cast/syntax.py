@@ -3,13 +3,20 @@
 
 from __future__ import unicode_literals
 
-import functools
-import inspect
-import itertools
-
 
 def noop(*_, **__):
     pass
+
+
+def default_func(*pargs, **_):
+    """
+    As a placeholder function, it works like lambda x: x.
+    As a method of a class, it returns cls or self.
+    :param pargs: positional arguments
+    :param _: keyword arguments, ignored
+    :return: 1st positional arguments
+    """
+    return pargs[0]
 
 
 def adaptive_call(entry):
@@ -57,7 +64,9 @@ def format_class_path(obj):
 
 
 def format_function_path(func):
+    import inspect
     from joker.cast import regular_attr_lookup
+
     if not inspect.ismethod(func):
         mod = getattr(func, '__module__', None)
         qualname = regular_attr_lookup(func, '__qualname__', '__name__')
@@ -129,10 +138,6 @@ def multilevel_get(d, *keys):
     return d
 
 
-def _first_arg(*a):
-    return a[0]
-
-
 class ConstantCallable(object):
     def __init__(self, value):
         self.value = value
@@ -141,30 +146,30 @@ class ConstantCallable(object):
         return self.value
 
 
-_always_return_true = ConstantCallable(True)
-_always_return_false = ConstantCallable(False)
+_always_true = ConstantCallable(True)
+_always_false = ConstantCallable(False)
 
 
 class Void(object):
     """
     Act as 0, False, '', [] 
     """
-    __bool__ = _always_return_false
-    __nonzero__ = _always_return_false
-    __add__ = _first_arg
-    __sub__ = _first_arg
-    __radd__ = _first_arg
-    __rsub__ = _first_arg
-    __round__ = _first_arg
-    __truediv__ = _first_arg
-    __floordiv__ = _first_arg
-    __rtruediv__ = _first_arg
-    __rfloordiv__ = _first_arg
-    __rmul__ = _first_arg
-    __gt__ = _always_return_false
-    __ge__ = _always_return_false
-    __lt__ = _always_return_false
-    __le__ = _always_return_false
+    __bool__ = _always_false
+    __nonzero__ = _always_false
+    __add__ = default_func
+    __sub__ = default_func
+    __radd__ = default_func
+    __rsub__ = default_func
+    __round__ = default_func
+    __truediv__ = default_func
+    __floordiv__ = default_func
+    __rtruediv__ = default_func
+    __rfloordiv__ = default_func
+    __rmul__ = default_func
+    __gt__ = _always_false
+    __ge__ = _always_false
+    __lt__ = _always_false
+    __le__ = _always_false
     __len__ = ConstantCallable(0)
 
     def __init__(self, symbol='-'):
@@ -183,46 +188,17 @@ class Void(object):
 
 
 class Universe(object):
-    __contains__ = _always_return_true
+    __contains__ = _always_true
     __iter__ = ConstantCallable(tuple())
 
 
-# TODO: suport negative index (castfunc=-1 to get last item)
-def castable(func):
-    """
-    >>> @castable
-    ... def myfunc(*args):
-    ...     for i in range(*args):
-    ...         yield i
-    ...
-    >>> myfunc(12, castfunc=tuple)
-    (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-    >>> myfunc(0, 12, 2, castfunc=2)
-    (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-   
-    Purely syntax sugar,
-    to make interactive use of some functions easier.
-    Cast a generator function to list, set, or select n-th item, etc.
+class Mu(object):
+    __slots__ = ['value']
 
-        myfunc(..., castfunc=list)   <=>  list(myfunc(...))
-        myfunc(..., castfunc=1)      <=>  list(myfunc(...))[1]
-    """
+    # mutable value
+    def __init__(self, value):
+        self.value = value
 
-    @functools.wraps(func)
-    def _decorated_func(*args, **kwargs):
-        castfunc = None
-        if 'castfunc' in kwargs:
-            castfunc = kwargs['castfunc']
-            del kwargs['castfunc']
-
-            # shortcut to pick up nth record
-            if isinstance(castfunc, int):
-                n = castfunc
-                castfunc = lambda r: next(itertools.islice(r, n, None))
-
-        result = func(*args, **kwargs)
-        if castfunc:
-            result = castfunc(result)
-        return result
-
-    return _decorated_func
+    def __call__(self, value):
+        self.value = value
+        return self
