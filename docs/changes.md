@@ -1,6 +1,11 @@
 Changes of joker-cast
 =====================
 
+#### 0.1.0
+* add numsys_cast() and numsys_revcast()
+* serialize module and indented_json_print() removed
+
+
 #### 0.0.20
 * add parse_time_to_seconds()
 * remove location.keep_file_extension() and url_to_filename()
@@ -9,7 +14,6 @@ Changes of joker-cast
 #### 0.0.19
 * add regular_lookup() and regular_attr_lookup()
 * fix __qualname__ AttributeError in format_function_path()
-
 
 #### 0.0.18
 * rename number_split() to numseries_segment() with backward compat

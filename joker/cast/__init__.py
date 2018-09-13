@@ -5,7 +5,7 @@ from __future__ import unicode_literals, print_function
 
 import six
 
-__version__ = '0.0.20'
+__version__ = '0.1.0'
 
 
 def regular_cast(original, *attempts):
@@ -113,13 +113,3 @@ def represent(obj, params):
         parts = ('{}={}'.format(k, repr(getattr(obj, k))) for k in params)
     s = ', '.join(parts)
     return '<{}({}) at {}>'.format(c, s, hex(id(obj)))
-
-
-def indented_json_print(o, *args, **kwargs):
-    import codecs
-    import json
-    # https://stackoverflow.com/a/12888081/2925169
-    decoder = codecs.getdecoder('unicode_escape')
-    jsonencoder = kwargs.pop('cls', None)
-    s = json.dumps(o, indent=4, sort_keys=True, cls=jsonencoder)
-    print(decoder(s)[0], *args, **kwargs)
