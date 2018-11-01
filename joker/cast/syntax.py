@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
+
+"""Syntax sugar"""
 
 
 def noop(*_, **__):
@@ -79,9 +81,16 @@ def format_function_path(func):
     return '{}.{}'.format(klass_path, func.__name__)
 
 
-# compatibility
-fmt_class_path = format_class_path
-fmt_function_path = format_function_path
+def printerr(*args, **kwargs):
+    import sys
+    kwargs.setdefault('file', sys.stderr)
+    pargs = []
+    for a in args:
+        if isinstance(a, BaseException):
+            cn = a.__class__.__name__
+            a = '{}: {}'.format(cn, a)
+        pargs.append(a)
+    print(*pargs, **kwargs)
 
 
 def instanciate(cls):
@@ -97,6 +106,8 @@ def instanciate_with_foolproof(cls):
     return cls()
 
 
+# deprecated!
+# https://docs.python.org/3/library/enum.html#using-automatic-values
 class AttrEchoer(object):
     """
     Resembles an enum type
@@ -108,11 +119,10 @@ class AttrEchoer(object):
         class Event(AttrEchoer):
             _prefix = 'event'
             bad_params = ''  # assign whatever
-            unauthorized_access = ''  
+            unauthorized_access = ''
             undefined_fault = ''
             ...
        
-        # no error: 
         assert Event.unauthoried  == 'event.bad_params'
     """
     _prefix = '_root.'
@@ -129,21 +139,18 @@ class AttrEchoer(object):
         return object.__getattribute__(self, key)
 
 
-def multilevel_get(d, *keys):
-    for k in keys:
-        v = d.get(k)
-        if v is None:
-            return None
-        d = v
-    return d
-
-
 class ConstantCallable(object):
     def __init__(self, value):
         self.value = value
 
     def __call__(self, *args, **kwargs):
         return self.value
+
+    def __str__(self):
+        return str(self.value)
+
+    def __repr__(self):
+        return repr(self.value)
 
 
 _always_true = ConstantCallable(True)

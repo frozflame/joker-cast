@@ -17,6 +17,9 @@ class Traverser(object):
         self.queue.append(obj)
         self.consumer = consumer
 
+    def __call__(self):
+        return self.traverse()
+
     def traverse(self):
         kls = self.__class__
         while self.queue:
@@ -32,6 +35,7 @@ def register_handler(*types):
         for typ in types:
             Traverser.handlers[typ] = func
         return func
+
     return decorator
 
 
