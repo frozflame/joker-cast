@@ -106,39 +106,6 @@ def instanciate_with_foolproof(cls):
     return cls()
 
 
-# deprecated!
-# https://docs.python.org/3/library/enum.html#using-automatic-values
-class AttrEchoer(object):
-    """
-    Resembles an enum type
-    Reduces typos by using syntax based completion of dev tools
-    
-    Example:
-        
-        @instanciate_with_foolproof
-        class Event(AttrEchoer):
-            _prefix = 'event'
-            bad_params = ''  # assign whatever
-            unauthorized_access = ''
-            undefined_fault = ''
-            ...
-       
-        assert Event.unauthoried  == 'event.bad_params'
-    """
-    _prefix = '_root.'
-
-    def __init__(self):
-        pass
-
-    def __getattribute__(self, key):
-        kls = type(self)
-        if key in kls.__dict__ and key != '_prefix':
-            if not kls._prefix:
-                return key
-            return '{}{}'.format(kls._prefix, key)
-        return object.__getattribute__(self, key)
-
-
 class ConstantCallable(object):
     def __init__(self, value):
         self.value = value
