@@ -6,6 +6,15 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+import warnings
+
+
+with warnings.catch_warnings():
+    warnings.simplefilter('always', DeprecationWarning)
+    warnings.warn(
+        "use 'joker.place' (in joker) instead of 'joker.cast.locational' (in joker-cast)",
+        DeprecationWarning,
+    )
 
 
 def under_package_dir(package, *paths):

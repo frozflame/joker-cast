@@ -1,5 +1,6 @@
 Historical changes of joker-cast
-================================
+--------------------------------
+
 
 #### 0.0.20
 * add parse_time_to_seconds()

@@ -1,5 +1,10 @@
 Changes of joker-cast
-=====================
+---------------------
+
+#### 0.1.1
+* remove `j.c.syntax.AttrEchoer`
+* deprecate `j.c.locational` (moved to `joker` pakcage)
+
 
 #### 0.1.0
 * add j.c.numeric.numsys_cast() and j.c.numeric.numsys_revcast()
