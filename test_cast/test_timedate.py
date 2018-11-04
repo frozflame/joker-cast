@@ -7,6 +7,7 @@ import datetime
 
 from joker.cast.timedate import (
     TimeSlicer, sexagesimal_format, sexagesimal_parse,
+    smart_time_parse_to_seconds, time_format,
 )
 
 
@@ -42,6 +43,31 @@ def test_sexagesimal():
     assert sexagesimal_format(61., 1) == '11.0'
 
 
+def test_time_parse():
+    # 1min 2sec
+    assert smart_time_parse_to_seconds('2:3') == 123
+
+    # 1hour 1min 2sec
+    assert smart_time_parse_to_seconds('1:1:2') == 3662
+
+    # 1hour 2sec
+    assert smart_time_parse_to_seconds('1::2') == 3602
+
+    # 1hour
+    assert smart_time_parse_to_seconds('1::') == 3600
+
+    # 1hour 1min 2sec
+    assert smart_time_parse_to_seconds('10102') == 3662
+
+    # 2min
+    assert smart_time_parse_to_seconds('200') == 120
+
+
+def test_time_format():
+    assert len(time_format()) == 13
+
+
 if __name__ == '__main__':
     test_sexagesimal()
     test_timeslicer()
+    test_time_parse()
