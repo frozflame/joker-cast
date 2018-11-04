@@ -52,107 +52,142 @@ def seconds_to_hms(seconds):
     return h, m, s
 
 
-def parse_time_to_seconds(s):
+def _smart_time_parse(s):
     """
-    >>> parse_time_to_seconds('2:3')  # 1min 2sec
-    62
-    >>> parse_time_to_seconds('1:1:2')  # 1hour 1min 2sec
-    3662
-    >>> parse_time_to_seconds('1::2')  # 1hour 2sec
-    3602
-    >>> parse_time_to_seconds('1::')  # 1hour
-    3600
-    >>> parse_time_to_seconds('10102')  # 1hour 1min 2sec
-    3662
-    >>> parse_time_to_seconds('200')  # 2min
-    120
-    :param s: a string representing time
-    :return:
+    :param s: (str)
+    :return:  [seconds, minutes, hours]
     """
     if ':' in s:
-        parts = [int(x or 0) for x in s.split(':')]
+        parts = [float(x or 0) for x in s.split(':')][:3]
         parts.reverse()
+        # len(parts) must be 2 or 3
+        if len(parts) == 2:
+            parts.append(0)
     else:
         sc = s
         parts = []
         for _ in range(3):
             parts.append(int(sc[-2:] or 0))
             sc = sc[:-2]
+    return parts
+
+
+def smart_time_parse(s):
+    sec, m, h = _smart_time_parse(s)
+    return datetime.time(h, m, sec)
+
+
+def smart_time_parse_to_seconds(s):
+    """
+    >>> smart_time_parse_to_seconds('2:3')  # 1min 2sec
+    123
+    >>> smart_time_parse_to_seconds('1:1:2')  # 1hour 1min 2sec
+    3662
+    >>> smart_time_parse_to_seconds('1::2')  # 1hour 2sec
+    3602
+    >>> smart_time_parse_to_seconds('1::')  # 1hour
+    3600
+    >>> smart_time_parse_to_seconds('10102')  # 1hour 1min 2sec
+    3662
+    >>> smart_time_parse_to_seconds('200')  # 2min
+    120
+    :param s: a string representing time
+    :return:
+    """
     seconds = 0
-    for i, x in enumerate(parts):
+    for i, x in enumerate(_smart_time_parse(s)):
         seconds += x * 60 ** i
     return seconds
 
 
-def eazy_date(x):
+parse_time_to_seconds = smart_time_parse_to_seconds
+
+
+def smart_time_parse_to_timedelta(s):
+    seconds = smart_time_parse_to_seconds(s)
+    return datetime.timedelta(seconds=seconds)
+
+
+def smart_date_parse(s):
     """  
-    >>> eazy_date(0)
+    >>> smart_date_parse(0)
     datetime.date(2017, 5, 5) 
-    >>> eazy_date('today')
+    >>> smart_date_parse('today')
     datetime.date(2017, 5, 5) 
     
-    >>> eazy_date(-1)
+    >>> smart_date_parse(-1)
     datetime.date(2017, 5, 4) 
-    >>> eazy_date('yesterday')
-    datetime.date(2017, 5, 4) 
+    >>> smart_date_parse('yesterday')
+    datetime.date(2017, 5, 4)
     
-    >>> eazy_date(1)
+    >>> smart_date_parse(1)
     datetime.date(2017, 5, 6) 
-    >>> eazy_date('tomorrow')
+    >>> smart_date_parse('tomorrow')
     datetime.date(2017, 5, 6) 
     
-    >>> eazy_date(datetime.date.today())
+    >>> smart_date_parse(datetime.date.today())
     datetime.date(2017, 5, 5) 
-    >>> eazy_date(datetime.datetime.now())
+    >>> smart_date_parse(datetime.datetime.now())
     datetime.date(2017, 5, 5) 
     
-    >>> eazy_date('20170505')
+    >>> smart_date_parse('20170505')
     datetime.date(2017, 5, 5) 
-    >>> eazy_date('2017-05-06')
+    >>> smart_date_parse('2017-05-06')
     datetime.date(2017, 5, 6) 
-    >>> eazy_date('05-06')
+    >>> smart_date_parse('05-06')
     datetime.date(2017, 5, 6) 
-    >>> eazy_date('0506')
+    >>> smart_date_parse('0506')
     datetime.date(2017, 5, 6) 
     
-    :param x: 
+    :param s: a string representing a date
     :return: a datetime.date instance
     """
     day = datetime.timedelta(days=1)
     today = datetime.date.today()
-    if isinstance(x, int):
-        return today + x * day
-    elif isinstance(x, datetime.date):
-        return x
-    elif isinstance(x, datetime.datetime):
-        return x.date()
-    elif isinstance(x, six.string_types):
-        x = want_unicode(x).lower()
+    if isinstance(s, int):
+        return today + s * day
+    elif isinstance(s, datetime.date):
+        return s
+    elif isinstance(s, datetime.datetime):
+        return s.date()
+    elif isinstance(s, six.string_types):
+        s = want_unicode(s).lower()
     else:
-        t = x.__class__.__name__
+        t = s.__class__.__name__
         raise TypeError('cannot convert type {} to date'.format(t))
 
-    if x == 'today':
-        return eazy_date(0)
-    if x == 'yesterday':
-        return eazy_date(-1)
-    if x == 'tomorrow':
-        return eazy_date(1)
+    if s == 'today':
+        return smart_date_parse(0)
+    if s == 'yesterday':
+        return smart_date_parse(-1)
+    if s == 'tomorrow':
+        return smart_date_parse(1)
 
-    if re.match(r'\d{8}$', x):
-        return datetime.datetime.strptime(x, '%Y%m%d').date()
+    if re.match(r'\d{8}$', s):
+        return datetime.datetime.strptime(s, '%Y%m%d').date()
 
-    if re.match(r'\d{4}$', x):
-        x = '{}{}'.format(today.year, x)
-        return datetime.datetime.strptime(x, '%Y%m%d').date()
+    if re.match(r'\d{4}$', s):
+        s = '{}{}'.format(today.year, s)
+        return datetime.datetime.strptime(s, '%Y%m%d').date()
 
-    if re.match(r'\d{4}-\d{1,2}-\d{1,2}$', x):
-        return datetime.datetime.strptime(x, '%Y-%m-%d').date()
+    if re.match(r'\d{4}-\d{1,2}-\d{1,2}$', s):
+        return datetime.datetime.strptime(s, '%Y-%m-%d').date()
 
-    if re.match(r'\d{1,2}-\d{1,2}$', x):
-        x = '{}-{}'.format(today.year, x)
-        return datetime.datetime.strptime(x, '%Y-%m-%d').date()
+    if re.match(r'\d{1,2}-\d{1,2}$', s):
+        s = '{}-{}'.format(today.year, s)
+        return datetime.datetime.strptime(s, '%Y-%m-%d').date()
     raise ValueError('unknow date format')
+
+
+easy_date = smart_date_parse
+
+
+def time_format(fmt=None, tm=None):
+    if fmt is None:
+        fmt = '%y%m%d-%H%M%S'
+    if tm is None:
+        tm = datetime.datetime.now()
+    return tm.strftime(fmt)
 
 
 def date_range(start, stop=0, step=1):
@@ -167,8 +202,8 @@ def date_range(start, stop=0, step=1):
     :param step: 
     :return: 
     """
-    start = eazy_date(start)
-    stop = eazy_date(stop)
+    start = smart_date_parse(start)
+    stop = smart_date_parse(stop)
     delta = datetime.timedelta(days=step)
     while (start - stop).total_seconds() * step < 0:
         yield start
