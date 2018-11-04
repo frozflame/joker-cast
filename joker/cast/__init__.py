@@ -27,20 +27,33 @@ def regular_cast(original, *attempts):
     return original
 
 
-def regular_lookup(obj, *keys):
+def regular_lookup(dictlike, *keys):
     for key in keys:
         try:
-            return obj[key]
+            return dictlike[key]
         except LookupError:
             pass
 
 
-def regular_attr_lookup(obj, *keys):
+def regular_attr_lookup(dictlike, *keys):
     for key in keys:
         try:
-            return getattr(obj, key)
+            return getattr(dictlike, key)
         except AttributeError:
             pass
+
+
+def cache_lookup(dictlike, key, default, *args, **kwargs):
+    try:
+        return dictlike[key]
+    except LookupError:
+        pass
+    if callable(default):
+        value = default(*args, **kwargs)
+    else:
+        value = default
+    dictlike[key] = value
+    return value
 
 
 def smart_cast(value, default):
