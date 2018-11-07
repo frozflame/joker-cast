@@ -1,6 +1,10 @@
 Changes of joker-cast
 ---------------------
 
+#### 0.2.0
+* remove module `jc.locational`
+* remove `jc.numeric.{floor,ceil}()`
+
 #### 0.1.0
 * rename `_first_arg` to `default_func` in `j.c.syntax`
 * remove module `j.c.serialize`, `j.c.indented_json_print()`
