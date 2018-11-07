@@ -4,10 +4,9 @@
 from __future__ import unicode_literals
 
 import itertools
+import math
 
 import six
-
-from joker.cast.numeric import ceil
 
 
 class _ListWrapper(object):
@@ -40,6 +39,7 @@ class Circular(_ListWrapper):
     >>> list(c[-1:5])
     [4, 0, 1, 2, 3, 4]
     """
+
     def __init__(self, iterable):
         super(Circular, self).__init__(iterable)
         assert self._items
@@ -54,7 +54,9 @@ class Circular(_ListWrapper):
         if m >= 0:
             return indexes
         n = len(self._items)
-        shift = ceil(-1. * m / n) * n
+        shift = math.ceil(-1. * m / n) * n
+        shift = int(shift)
+
         new_indexes = []
         for ix in indexes:
             if ix is None:
@@ -96,6 +98,7 @@ class CircularString(object):
     >>> cs[-1:12]
     '9012345678901'
     """
+
     def __init__(self, string):
         self._string = string
         self._circular = Circular(string)
@@ -106,5 +109,3 @@ class CircularString(object):
 
     def __getitem__(self, key):
         return ''.join(list(self._circular[key]))
-
-
