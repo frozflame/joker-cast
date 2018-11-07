@@ -3,8 +3,6 @@
 
 from __future__ import unicode_literals
 
-import math
-
 
 def numsys_cast(num, base, precision=0):
     if not isinstance(base, int) or base <= 1:
@@ -37,16 +35,6 @@ def numsys_revcast(base, integer_digits, fractional_digits):
     for ix, digi in enumerate(fractional_digits):
         fractional += (1. / 60) ** (ix + 1) * digi
     return integer + fractional
-
-
-# deprecated
-def floor(number):
-    return int(math.floor(number))
-
-
-# deprecated
-def ceil(number):
-    return int(math.ceil(number))
 
 
 def overlap_size(v1, v2, u1, u2):
