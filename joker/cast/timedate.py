@@ -4,12 +4,12 @@
 from __future__ import unicode_literals
 
 import datetime
+import functools
 import re
 import sys
 import time
 
 import six
-
 from joker.cast import want_unicode
 
 _sexagesimal_chars = '0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY'
@@ -223,6 +223,18 @@ class Timer(object):
         p = 'Timer {}'.format(self.name) if self.name else 'Timer'
         msg = '{}: {} sec'.format(p, interval)
         print(msg, file=sys.stderr)
+
+
+def timed(func):
+    """A decorator reporting execution time"""
+
+    @functools.wraps(func)
+    def retfunc(*args, **kwargs):
+        name = getattr(func, '__name__', None) or func.__class__.__name__
+        with Timer(name + '()'):
+            return func(*args, **kwargs)
+
+    return retfunc
 
 
 class TimeMachine(object):
