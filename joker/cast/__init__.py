@@ -5,7 +5,7 @@ from __future__ import unicode_literals, print_function
 
 import six
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 
 def regular_cast(original, *attempts):
