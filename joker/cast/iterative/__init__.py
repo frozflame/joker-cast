@@ -165,8 +165,6 @@ def window_sum(wsize, numbers):
 def alternate(*iterables, **kwargs):
     """
     :param iterables:
-    :parameter fill:
-
     >>> ''.join(list(alternate('ABCD', 'abcde')))
     'AaBbCcDde'
     >>> ''.join(list(alternate('ABCD', 'abcde', fill='_')))
@@ -179,12 +177,3 @@ def alternate(*iterables, **kwargs):
     for item in alt:
         if item is not _void:
             yield item
-
-
-def nonblank_lines_of(*args, **kwargs):
-    with open(*args, **kwargs) as fin:
-        for line in fin:
-            line = line.strip()
-            if not line:
-                continue
-            yield line

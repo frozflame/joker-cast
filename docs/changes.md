@@ -2,8 +2,10 @@ Changes of joker-cast
 ---------------------
 
 #### 0.2.0
+* add `jc.timedate.timed()`
 * remove module `jc.locational`
 * remove `jc.numeric.{floor,ceil}()`
+* remove `jc.iterative.nonblank_lines_of()`
 
 #### 0.1.0
 * rename `_first_arg` to `default_func` in `j.c.syntax`
