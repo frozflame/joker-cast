@@ -4,24 +4,12 @@
 from __future__ import division, print_function
 
 from joker.cast import syntax
-from joker.cast.serialize import JSONEncoderExtended, human_json_dumps
-
-
-@syntax.instanciate_with_foolproof
-class Event(syntax.AttrEchoer):
-    prefix = 'event'
-    unauthorized = ''  # assign whatever
-    undefined_fault = ''
 
 
 def test_path_formatters():
     vals = [
         syntax.format_class_path(dict),
-        syntax.format_class_path(Event),
-        syntax.format_class_path(JSONEncoderExtended),
         syntax.format_function_path(dict.pop),
-        syntax.format_function_path(JSONEncoderExtended.default),
-        syntax.format_function_path(human_json_dumps),
         syntax.format_function_path(lambda: 1),
     ]
     for v in vals:

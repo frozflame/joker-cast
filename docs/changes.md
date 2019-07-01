@@ -1,6 +1,10 @@
 Changes of joker-cast
 ---------------------
 
+#### 0.3
+* flatten `jc.iterative`: `jc.iterative`, `jc.circular`, `jc.dictionary`
+* remove `jc.nested`
+
 #### 0.2.0
 * add `jc.timedate.timed()`
 * remove module `jc.locational`

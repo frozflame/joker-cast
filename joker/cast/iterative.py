@@ -115,12 +115,6 @@ def numseries_segment(wsize, iterable):
     yield chunk
 
 
-def number_split(intervalsize, iterable):
-    # TODO: remove this at 0.1.0
-    # DEPRECATED!
-    return numseries_segment(intervalsize, iterable)
-
-
 def all_combinations(iterable):
     """
     >>> list(all_combinations('abcd'))
