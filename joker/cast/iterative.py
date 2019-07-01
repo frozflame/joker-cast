@@ -74,6 +74,12 @@ def chunkwize(chunksize, iterable):
     yield chunk
 
 
+def chunkwize_split(chunksize, sequence):
+    n = len(sequence)
+    chunksize = chunksize or n
+    return [sequence[i: i + chunksize] for i in range(0, n, chunksize)]
+
+
 def chunkwize_parallel(chunksize, *sequences):
     """
     >>> s1 = '1234567890'
@@ -90,7 +96,7 @@ def chunkwize_parallel(chunksize, *sequences):
         if any(r):
             yield r
         else:
-            raise StopIteration
+            break
 
 
 def numseries_segment(wsize, iterable):
