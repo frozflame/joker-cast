@@ -4,8 +4,6 @@
 from __future__ import unicode_literals
 
 import itertools
-from collections import deque
-from itertools import chain, combinations
 
 from six import moves as six_moves
 
@@ -142,8 +140,13 @@ def all_combinations(iterable):
      ('a', 'b', 'c', 'd')]
     """
     items = list(iterable)
-    return chain.from_iterable(
-        combinations(items, i) for i in range(1 + len(items)))
+    return itertools.chain.from_iterable(
+        itertools.combinations(items, i) for i in range(1 + len(items)))
+
+
+def cumsum(nums):
+    import operator
+    return itertools.accumulate(nums, operator.add)
 
 
 def window_sum(wsize, numbers):
@@ -155,7 +158,8 @@ def window_sum(wsize, numbers):
     :param wsize: integer, size of the moving window
     :param numbers: an iterable of numbers
     """
-    queue = deque(maxlen=wsize)
+    import collections
+    queue = collections.deque(maxlen=wsize)
     for num in numbers:
         queue.append(num)
         if len(queue) >= wsize:
@@ -177,3 +181,18 @@ def alternate(*iterables, **kwargs):
     for item in alt:
         if item is not _void:
             yield item
+
+
+def _section_split(iterable, chksep):
+    group = []
+    for x in iterable:
+        chk = chksep(x)
+        if not chk:
+            group.append(x)
+            continue
+        if group:
+            yield None, group
+            group = []
+        yield chk, x
+    if group:
+        yield None, group
