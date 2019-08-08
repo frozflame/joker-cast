@@ -5,7 +5,7 @@ from __future__ import division, print_function
 
 from string import digits
 
-from joker.cast.circular import CircularString
+from joker.cast.collective import CircularString
 
 
 def test_circular_string():
