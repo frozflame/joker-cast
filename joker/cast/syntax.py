@@ -87,9 +87,11 @@ def printerr(*args, **kwargs):
     pargs = []
     for a in args:
         if isinstance(a, BaseException):
-            cn = a.__class__.__name__
-            a = '{}: {}'.format(cn, a)
-        pargs.append(a)
+            pargs.append(a.__class__.__name__)
+            pargs.append(str(a))
+            kwargs.setdefault('sep', ': ')
+        else:
+            pargs.append(a)
     print(*pargs, **kwargs)
 
 
