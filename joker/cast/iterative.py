@@ -183,30 +183,33 @@ def alternate(*iterables, **kwargs):
             yield item
 
 
-def split_by_header(iterable, func):
+def split(iterable, func):
     header = None
     elements = []
     for x in iterable:
-        if func(x):
-            if header is not None or elements:
-                yield header, elements
-            header = x
-            elements = []
-        else:
+        if not func(x):
             elements.append(x)
-    if header is not None or elements:
-        yield header, elements
+            continue
+        if elements or header is not None:
+            yield header, x, elements
+        header = x
+        elements = []
+    if elements or header is not None:
+        yield header, None, elements
 
 
-def split_by_footer(iterable, func):
-    elements = []
+def generic_split(iterable, func):
+    header = None
+    elements = func()
     for x in iterable:
-        if func(x):
-            yield x, elements
-            elements = []
-        else:
+        container = func(x)
+        if container is None:
             elements.append(x)
-    if elements:
-        yield None, elements
-
+            continue
+        if elements or header is not None:
+            yield header, x, elements
+        header = x
+        elements = container
+    if elements or header is not None:
+        yield header, None, elements
 
