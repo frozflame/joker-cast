@@ -165,9 +165,11 @@ class CircularReferenceError(ValueError):
 
 
 class CircularReferenceDetector(object):
+    identset_class = set
+
     def __init__(self, ident, *ancestors):
         self._ident = ident
-        self._ancestors = set(ancestors)
+        self._ancestors = self.identset_class(ancestors)
 
     def branch(self, ident):
         if ident in self._ancestors:
