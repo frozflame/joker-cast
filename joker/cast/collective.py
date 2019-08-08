@@ -168,10 +168,11 @@ class CircularReferenceDetector(object):
     identset_class = set
 
     def __init__(self, ident, *ancestors):
-        self._ident = ident
-        self._ancestors = self.identset_class(ancestors)
+        self.ident = ident
+        self.ancestors = self.identset_class(ancestors)
 
     def branch(self, ident):
-        if ident in self._ancestors:
-            raise CircularReferenceError
-        return CircularReferenceDetector(ident, self._ident, *self._ancestors)
+        if ident in self.ancestors:
+            msg = '{} => {}'.format(self.ident, ident)
+            raise CircularReferenceError(msg)
+        return CircularReferenceDetector(ident, self.ident, *self.ancestors)
