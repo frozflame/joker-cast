@@ -7,7 +7,7 @@ import datetime
 
 from joker.cast.timedate import (
     TimeSlicer, sexagesimal_format, sexagesimal_parse,
-    smart_time_parse_to_seconds, time_format,
+    smart_time_parse_to_seconds, time_format, Year,
 )
 
 
@@ -65,6 +65,26 @@ def test_time_parse():
 
 def test_time_format():
     assert len(time_format()) == 13
+
+
+def test_class_year():
+    assert Year(1).val == 1
+    assert Year(1).__repr__() == 'Year(1)'
+    assert Year(1).__str__() == '1'
+
+    assert Year(0).val == 1
+    assert Year(0).__repr__() == 'Year(1)'
+    assert Year(0).__str__() == '1'
+
+    assert Year(-1).val == 0
+    assert Year(-1).__repr__() == 'Year(-1)'
+    assert Year(-1).__str__() == '1 BC'
+
+    assert Year(0) == Year(0)
+    assert Year(-1) - Year(-2) == 1
+    assert Year(-1) - 1 == Year(-2)
+
+
 
 
 if __name__ == '__main__':
