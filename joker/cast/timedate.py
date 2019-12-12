@@ -309,3 +309,66 @@ class TimeSlicer(TimeMachine):
         delta = dt - self.EPOCH
         # use .total_seconds to be compat with python 2.x
         return int(delta.total_seconds() / self._ts_delta.total_seconds())
+
+
+class Year(object):
+    __slots__ = ['val']
+
+    def __init__(self, num, trad=True):
+        # 0 => 1 AD, 1 => 1 AD, -1 => 1 BC
+        self.val = num + 1 if trad and num < 1 else num
+
+    def __repr__(self):
+        c = self.__class__.__name__
+        v = self.val
+        num = self.val - 1 if self.val < 1 else self.val
+        return '{}({})'.format(c, num)
+
+    def __str__(self):
+        if self.val > 0:
+            return str(self.val)
+        return '{} BC'.format(1 - self.val)
+
+    def __sub__(self, other):
+        if isinstance(other, Year):
+            return self.val - other.val
+        if isinstance(other, int):
+            return Year(self.val - other, trad=False)
+        return NotImplemented
+
+    def __isub__(self, other):
+        if isinstance(other, int):
+            self.val -= other
+            return self
+        raise TypeError('unsupported operation')
+
+    def __add__(self, other):
+        if isinstance(other, int):
+            return Year(self.val + other, trad=False)
+        raise TypeError('unsupported operation')
+
+    def __iadd__(self, other):
+        if isinstance(other, int):
+            self.val += other
+            return self
+        raise TypeError('unsupported operation')
+
+    def __eq__(self, other):
+        return self.val == other.val
+
+    @classmethod
+    def parse(cls, s):
+        try:
+            return cls(int(s))
+        except ValueError:
+            pass
+        parts = re.split(r'(\d+)', s)
+        if parts[0] and parts[-1]:
+            raise ValueError("bad format: '{}'".format(s))
+        affix = parts[0] or parts[-1]
+        affix = affix.strip()
+        if affix.upper() in {'BC', 'B.C.', 'BCE', 'B.C.E.'}:
+            return cls(-int(parts[1]))
+        if affix.upper() in {'AD', 'A.D.', 'CE', 'C.E.'}:
+            return cls(int(parts[1]))
+        raise ValueError("bad token: '{}'".format(affix))
