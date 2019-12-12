@@ -84,7 +84,16 @@ def test_class_year():
     assert Year(-1) - Year(-2) == 1
     assert Year(-1) - 1 == Year(-2)
 
+    assert Year.parse('2001 ad').val == 2001
+    assert Year.parse('2001 AD').val == 2001
+    assert Year.parse('2001 A.D.').val == 2001
+    assert Year.parse('2001 CE').val == 2001
+    assert Year.parse('2001 C.E.').val == 2001
 
+    assert Year.parse('12 BC').val == -11
+    assert Year.parse('12 B.C.').val == -11
+    assert Year.parse('12 BCE').val == -11
+    assert Year.parse('12 B.C.E.').val == -11
 
 
 if __name__ == '__main__':
