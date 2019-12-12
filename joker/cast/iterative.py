@@ -184,6 +184,11 @@ def alternate(*iterables, **kwargs):
 
 
 def split(iterable, func):
+    """
+    :param iterable: 
+    :param func: func(x) => True if x is a header (footer)
+    :return: an iterable if 3-tuples: (header, footer, elements)
+    """
     header = None
     elements = []
     for x in iterable:
