@@ -186,8 +186,9 @@ def alternate(*iterables, **kwargs):
 def until_convergent(func, start, n=1000):
     import collections
     que = collections.deque([start], maxlen=2)
-    cnt = itertools.count(n, -1)
 
+    # allow n = float('inf')
+    cnt = itertools.count(n, -1)
     while next(cnt) > 0:
         que.append(func(que[0]))
         if que[0] == que[1]:
