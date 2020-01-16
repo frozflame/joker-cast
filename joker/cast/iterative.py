@@ -183,6 +183,17 @@ def alternate(*iterables, **kwargs):
             yield item
 
 
+def until_convergent(func, start, n=1000):
+    import collections
+    que = collections.deque([start], maxlen=2)
+    cnt = itertools.count(n, -1)
+
+    while next(cnt) > 0:
+        que.append(func(que[0]))
+        if que[0] == que[1]:
+            return que[0]
+
+
 def split(iterable, func):
     """
     :param iterable: 
@@ -217,4 +228,3 @@ def generic_split(iterable, func):
         elements = container
     if elements or header is not None:
         yield header, None, elements
-
