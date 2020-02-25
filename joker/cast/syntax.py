@@ -163,6 +163,9 @@ class Void(object):
         return False
 
 
+Object = type('Object', (object,), {})
+
+
 class Universe(object):
     __contains__ = _always_true
     __iter__ = ConstantCallable(tuple())
@@ -178,3 +181,8 @@ class Mu(object):
     def __call__(self, value):
         self.value = value
         return self
+
+
+class Glass(object):
+    def __getattr__(self, name):
+        return globals().get(name)

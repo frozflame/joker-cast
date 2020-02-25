@@ -1,6 +1,9 @@
 Changes of joker-cast
 ---------------------
 
+### 0.5
+* add syntax.Glass, syntax.Object
+
 ### 0.4
 * add chunkwize_split()
 * add iterative.until_convergent
