@@ -50,10 +50,7 @@ config = {
     'install_requires': read("requirements.txt"),
     'classifiers': [
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
@@ -66,8 +63,8 @@ config = {
 
     # ensure copy static file to runtime directory
     'include_package_data': True,
-    # 'long_description': read('README.md'),
-    # 'long_description_content_type': "text/markdown",
+    'long_description': read('README.md'),
+    'long_description_content_type': "text/markdown",
 }
 
 setup(**config)
