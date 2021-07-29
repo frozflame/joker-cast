@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from __future__ import unicode_literals, print_function
+import collections
+from typing import Union
 
 """Syntax sugar"""
 
@@ -51,36 +52,7 @@ def adaptive_call(entry):
     return items[0](*pargs, **kwargs)
 
 
-def format_class_path(obj):
-    if isinstance(obj, type):
-        klass = obj
-    else:
-        klass = type(obj)
-    m = getattr(klass, '__module__', None)
-    q = getattr(klass, '__qualname__', None)
-    n = getattr(klass, '__name__', None)
-    name = q or n or ''
-    if m:
-        return '{}.{}'.format(m, name)
-    return name
-
-
-def format_function_path(func):
-    import inspect
-    from joker.cast import regular_attr_lookup
-
-    if not inspect.ismethod(func):
-        mod = getattr(func, '__module__', None)
-        qualname = regular_attr_lookup(func, '__qualname__', '__name__')
-        qualname = qualname or '<func>'
-        if mod is None:
-            return qualname
-        else:
-            return '{}.{}'.format(mod, qualname)
-    klass_path = format_class_path(func.__self__)
-    return '{}.{}'.format(klass_path, func.__name__)
-
-
+# TODO: be more general
 def printerr(*args, **kwargs):
     import sys
     kwargs.setdefault('file', sys.stderr)
