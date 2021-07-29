@@ -106,12 +106,6 @@ def want_str(s, **kwargs):
     return s
 
 
-def namedtuple_to_dict(nt):
-    from collections import OrderedDict
-    fields = getattr(nt, '_fields')
-    return OrderedDict(zip(fields, nt))
-
-
 def represent(obj, params):
     """
     :param obj:
