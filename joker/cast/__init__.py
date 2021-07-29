@@ -5,10 +5,10 @@ from __future__ import unicode_literals, print_function
 
 import six
 
-__version__ = '0.4'
+__version__ = '0.5.0!'
 
 
-def regular_cast(original, *attempts):
+def regular_cast(original, *try_funcs):
     """
     >>> regular_cast('12.3', int, float)
     12.3
@@ -17,7 +17,7 @@ def regular_cast(original, *attempts):
     >>> regular_cast('12.3a', int, float, 0)
     0
     """
-    for atmpt in attempts:
+    for atmpt in try_funcs:
         if not callable(atmpt):
             return atmpt
         try:
@@ -27,16 +27,16 @@ def regular_cast(original, *attempts):
     return original
 
 
-def regular_lookup(dictlike, *keys):
-    for key in keys:
+def regular_lookup(dictlike, *try_keys):
+    for key in try_keys:
         try:
             return dictlike[key]
         except LookupError:
             pass
 
 
-def regular_attr_lookup(dictlike, *keys):
-    for key in keys:
+def regular_attr_lookup(dictlike, *try_attrnames):
+    for key in try_attrnames:
         try:
             return getattr(dictlike, key)
         except AttributeError:
