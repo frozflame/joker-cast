@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-import six
-
 __version__ = '0.5.0!'
 
 
@@ -79,19 +77,8 @@ def want_bytes(s, **kwargs):
     :param kwargs: key word arguments passed to str.encode(..)
     :return: 
     """
-    if not isinstance(s, six.binary_type):
+    if not isinstance(s, bytes):
         s = s.encode(**kwargs)
-    return s
-
-
-def want_unicode(s, **kwargs):
-    """
-    :param s: 
-    :param kwargs: key word arguments passed to bytes.decode(..)
-    :return: 
-    """
-    if not isinstance(s, six.text_type):
-        return s.decode(**kwargs)
     return s
 
 
@@ -104,6 +91,9 @@ def want_str(s, **kwargs):
     if not isinstance(s, str):
         return s.decode(**kwargs)
     return s
+
+
+want_unicode = want_str
 
 
 def represent(obj, params):

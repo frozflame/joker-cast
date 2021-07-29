@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-
 import collections
 import itertools
 import math
-
-import six
 
 
 class DefaultOrderedDict(collections.OrderedDict):
@@ -47,7 +44,7 @@ class RecursiveCounter(RecursiveDefaultDict):
     def total(self, as_string=False):
         s = 0
         for v in self.values():
-            if isinstance(v, six.integer_types) or isinstance(v, float):
+            if isinstance(v, int) or isinstance(v, float):
                 s += v
             elif isinstance(v, RecursiveCounter):
                 s += v.total()
@@ -127,7 +124,7 @@ class Circular(_ListWrapper):
 
     def __getitem__(self, key):
         n = len(self._items)
-        if isinstance(key, six.integer_types):
+        if isinstance(key, int):
             return self._items[key % n]
 
         if isinstance(key, slice):

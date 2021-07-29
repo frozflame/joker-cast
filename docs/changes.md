@@ -3,10 +3,12 @@ Changes of joker-cast
 
 ### 0.5.0
 * drop python 2.x support
+* drop dependencies on six
 * add syntax.Glass, syntax.Object
 * remove syntax.format_class_path(), syntax.format_function_path() -- moved to volkanic.introspect
 * long_description in setup.py 
 * remove j.c.circular, j.c.dictionary
+* remove namedtuple_to_dict()
 
 ### 0.4
 * add chunkwize_split()

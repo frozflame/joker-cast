@@ -8,7 +8,6 @@ import re
 import sys
 import time
 
-import six
 from joker.cast import want_unicode
 
 _sexagesimal_chars = '0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY'
@@ -149,7 +148,7 @@ def smart_date_parse(s):
         return s
     elif isinstance(s, datetime.datetime):
         return s.date()
-    elif isinstance(s, six.string_types):
+    elif isinstance(s, str):
         s = want_unicode(s).lower()
     else:
         t = s.__class__.__name__

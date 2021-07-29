@@ -3,8 +3,6 @@
 
 import itertools
 
-from six import moves as six_moves
-
 
 def flatten(tup):
     """
@@ -174,8 +172,7 @@ def alternate(*iterables, **kwargs):
     """
     _void = object()
     fill = kwargs.get('fill', _void)
-    zip_longest = six_moves.zip_longest
-    alt = itertools.chain(*zip_longest(*iterables, fillvalue=fill))
+    alt = itertools.chain(*itertools.zip_longest(*iterables, fillvalue=fill))
     for item in alt:
         if item is not _void:
             yield item

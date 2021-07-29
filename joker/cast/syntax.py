@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-import collections
-from typing import Union
-
 """Syntax sugar"""
 
 
