@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from __future__ import unicode_literals
-
 
 def numsys_cast(num, base, precision=0):
     if not isinstance(base, int) or base <= 1:
