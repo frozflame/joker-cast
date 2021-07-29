@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from __future__ import unicode_literals
 from joker.cast.numeric import (
     numsys_cast,
     numsys_revcast,
