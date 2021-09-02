@@ -208,19 +208,38 @@ def date_range(start, stop=0, step=1):
         start += delta
 
 
-class Timer(object):
-    def __init__(self, name=''):
+class Timer:
+    def __init__(self, name: str = '', offset: float = 0.):
         self.name = name
+        self.started_at = time.time() + offset
+        self.entered_at = None
+
+    def __repr__(self):
+        parts = self.__class__.__name__, repr(self.name), -self.seconds
+        return '{}({}, {})'.format(*parts)
+
+    def __str__(self):
+        tmr = 'Timer {}'.format(self.name).strip()
+        if self.entered_at is None:
+            return '{}: {}'.format(tmr, self.seconds)
+        since_entering = round(time.time() - self.entered_at, 3)
+        return '{}: {}, {}'.format(tmr, self.seconds, since_entering)
 
     def __enter__(self):
-        self.time = time.time()
+        self.entered_at = time.time()
         return self
 
     def __exit__(self, typ, value, traceback):
-        interval = time.time() - self.time
-        p = 'Timer {}'.format(self.name) if self.name else 'Timer'
-        msg = '{}: {} sec'.format(p, interval)
-        print(msg, file=sys.stderr)
+        print(self, file=sys.stderr)
+        self.entered_at = None
+
+    @property
+    def seconds(self):
+        diff = time.time() - self.started_at
+        return round(diff, 3)
+
+    def as_json_serializable(self):
+        return self.seconds
 
 
 def timed(func):

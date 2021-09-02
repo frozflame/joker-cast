@@ -147,8 +147,8 @@ def cumsum(nums):
 
 def window_sum(wsize, numbers):
     """
-    >>> numbers = [1, 10, 100, 1000, 10000, 100000]
-    >>> list(window_sum(3, numbers))
+    >>> nums = [1, 10, 100, 1000, 10000, 100000]
+    >>> list(window_sum(3, nums))
     [111, 1110, 11100, 111000]
     
     :param wsize: integer, size of the moving window

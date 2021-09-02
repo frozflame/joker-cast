@@ -1,34 +1,43 @@
 Changes of joker-cast
 ---------------------
 
+### 0.5.1
+
+* improved Timer
+
 ### 0.5.0
+
 * drop python 2.x support
 * drop dependencies on six
 * add syntax.Glass, syntax.Object
 * remove syntax.format_class_path(), syntax.format_function_path() -- moved to volkanic.introspect
-* long_description in setup.py 
+* long_description in setup.py
 * remove j.c.circular, j.c.dictionary
 * remove namedtuple_to_dict()
 
 ### 0.4
+
 * add chunkwize_split()
 * add iterative.until_convergent
-* add split and generic_split 
+* add split and generic_split
 * add cumsum
 * add chunkwize_split
 * merge circular and dictionary into collective
 
 ### 0.3
+
 * flatten `jc.iterative`: `jc.iterative`, `jc.circular`, `jc.dictionary`
 * remove `jc.nested`
 
 ### 0.2.0
+
 * add `jc.timedate.timed()`
 * remove module `jc.locational`
 * remove `jc.numeric.{floor,ceil}()`
 * remove `jc.iterative.nonblank_lines_of()`
 
 ### 0.1.0
+
 * rename `_first_arg` to `default_func` in `j.c.syntax`
 * remove module `j.c.serialize`, `j.c.indented_json_print()`
 * remove compat name `j.c.fmt_class_path` (use `j.c.format_class_path`)

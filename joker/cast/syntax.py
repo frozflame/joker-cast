@@ -22,8 +22,8 @@ def default_func(*pargs, **_):
 def adaptive_call(entry):
     """
     >>> import sys
-    >>> entry = [print, ['a', 'b'], {'file': sys.stderr}]
-    >>> adaptive_call(entry)
+    >>> entr = [print, ['a', 'b'], {'file': sys.stderr}]
+    >>> adaptive_call(entr)
 
     :param entry: an iterable or a callable
     :return:
