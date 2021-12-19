@@ -38,6 +38,21 @@ def sexagesimal_parse(numstr):
     return numsys_revcast(60, idigits, fdigits or [0])
 
 
+def start_of_this_year() -> datetime.datetime:
+    today = datetime.date.today()
+    return datetime.datetime(today.year, 1, 1)
+
+
+def start_of_this_month() -> datetime.datetime:
+    today = datetime.date.today()
+    return datetime.datetime(today.year, today.month, 1)
+
+
+def start_of_today() -> datetime.datetime:
+    today = datetime.date.today()
+    return datetime.datetime(today.year, today.month, today.day)
+
+
 def seconds_to_hms(seconds):
     """
     >>> seconds_to_hms(4000)
