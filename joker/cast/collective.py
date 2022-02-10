@@ -6,6 +6,65 @@ import itertools
 import math
 
 
+class KnownKey:
+    def __set_name__(self, _, name):
+        # __init__ is called before __set_name__
+        if not self.name:
+            self.name = name
+
+    def __init__(self, name: str = None):
+        # __init__ is called before __set_name__
+        self.name = name
+
+    def __get__(self, instance, owner):
+        if not instance:
+            return
+        return instance[self.name]
+
+
+class TransparentWrapper:
+    def __init__(self, obj):
+        self._obj = obj
+
+    def __getitem__(self, key):
+        return self._obj[key]
+
+    def __getattr__(self, name: str):
+        return getattr(self._obj, name)
+
+
+def _is_property(attr):
+    if isinstance(attr, property):
+        return True
+    cn = attr.__class__.__name__
+    if cn == 'cached_property':
+        return True
+    return False
+
+
+class NovelDict(dict):
+    def __getattr__(self, key: str):
+        return self[key]
+
+    def __setattr__(self, key: str, value):
+        self[key] = value
+
+    def __delattr__(self, key: str):
+        del self[key]
+
+    def get_properties(self) -> dict:
+        props = {}
+        for key, val in self.__class__.__dict__.items():
+            if _is_property(val):
+                props[key] = getattr(self, key)
+        return props
+
+    def get_data_and_properties(self) -> dict:
+        data = self.copy()
+        data.update(self.get_properties())
+        return data
+
+
 class DefaultOrderedDict(collections.OrderedDict):
     # Source: http://stackoverflow.com/a/6190500/562769
     def __init__(self, default_factory=None, *a, **kw):
