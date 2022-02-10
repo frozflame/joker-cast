@@ -91,5 +91,5 @@ def human_filesize(number):
         if number < 10000 or unit == "YB":
             return number, unit
         else:
-            number = number / 1024.0
+            number /= 1024.0
             # to next loop, no return!
