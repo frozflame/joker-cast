@@ -5,32 +5,9 @@ import collections
 import itertools
 import math
 
+from joker.cast.syntax import KnownKey, TransparentWrapper
 
-class KnownKey:
-    def __set_name__(self, _, name):
-        # __init__ is called before __set_name__
-        if not self.name:
-            self.name = name
-
-    def __init__(self, name: str = None):
-        # __init__ is called before __set_name__
-        self.name = name
-
-    def __get__(self, instance, owner):
-        if not instance:
-            return
-        return instance[self.name]
-
-
-class TransparentWrapper:
-    def __init__(self, obj):
-        self._obj = obj
-
-    def __getitem__(self, key):
-        return self._obj[key]
-
-    def __getattr__(self, name: str):
-        return getattr(self._obj, name)
+_compat = [KnownKey, TransparentWrapper]
 
 
 def _is_property(attr):
