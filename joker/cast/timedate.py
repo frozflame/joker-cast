@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 # coding: utf-8
+from __future__ import annotations
 
-
+import collections
 import datetime
 import functools
+import math
 import re
 import sys
 import time
+from datetime import timedelta
+from typing import NamedTuple
 
 from joker.cast import want_unicode
 
@@ -404,3 +408,104 @@ class Year(object):
         if affix.upper() in {'AD', 'A.D.', 'CE', 'C.E.'}:
             return cls(int(parts[1]))
         raise ValueError("bad token: '{}'".format(affix))
+
+
+def _n_minutes_floor(n: int, dt: datetime.datetime):
+    minutes = math.floor(dt.minute / n) * n
+    return datetime.datetime(dt.year, dt.month, dt.day, dt.hour, minutes)
+
+
+def _n_minutes_ceil(n: int, dt: datetime.datetime):
+    dti = datetime.datetime(dt.year, dt.month, dt.day, dt.hour)
+    # minutes can be 60
+    minutes = math.ceil(dt.minute / n + dt.second / 60. / n) * n
+    return dti + timedelta(minutes=minutes)
+
+
+def quarter_floor(dt: datetime.datetime):
+    return _n_minutes_floor(15, dt)
+
+
+def quarter_ceil(dt: datetime.datetime):
+    return _n_minutes_ceil(15, dt)
+
+
+def quintminute_floor(dt: datetime.datetime):
+    return _n_minutes_floor(5, dt)
+
+
+def quintminute_ceil(dt: datetime.datetime):
+    return _n_minutes_ceil(5, dt)
+
+
+class TimeSpan(NamedTuple):
+    a: datetime.datetime
+    b: datetime.datetime
+
+    @classmethod
+    def from_timestamps(cls, a: float, b: float):
+        return cls(
+            datetime.datetime.fromtimestamp(a),
+            datetime.datetime.fromtimestamp(b)
+        )
+
+    @property
+    def duration(self):
+        delta = self.b - self.a
+        return delta.total_seconds()
+
+    def __contains__(self, v: datetime.datetime) -> bool:
+        return self.a <= v <= self.b
+
+    @property
+    def as_dict(self):
+        return {'a': self.a, 'b': self.b}
+
+    @property
+    def as_json_serializable(self):
+        return {
+            'a': self.a.strftime("%Y-%m-%d %H:%M:%S"),
+            'b': self.b.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+
+    @property
+    def as_mongo_filter(self):
+        return {'$gte': self.a, '$lte': self.b}
+
+    @property
+    def as_timestamps(self):
+        return self.a.timestamp(), self.b.timestamp()
+
+    def fmt_for_human(self):
+        if self.a.date() == self.b.date():
+            return f'{self.a:%Y-%m-%d %H:%M:%S} ~ {self.b:%H:%M:%S}'
+        return f'{self.a:%Y-%m-%d %H:%M:%S} ~ {self.b:%Y-%m-%d %H:%M:%S}'
+
+    def expand(self, a_seconds: int, b_seconds: int = None):
+        if b_seconds is None:
+            b_seconds = a_seconds
+        a_delta = timedelta(seconds=a_seconds)
+        b_delta = timedelta(seconds=b_seconds)
+        return TimeSpan(self.a - a_delta, self.b + b_delta)
+
+    def expand_to_quarters(self):
+        return TimeSpan(quarter_floor(self.a), quarter_ceil(self.b))
+
+    def expand_to_quintminutes(self):
+        return TimeSpan(quintminute_floor(self.a), quintminute_ceil(self.b))
+
+    def iter_quarter_time_spans(self):
+        whole = self.expand_to_quarters()
+        queue = collections.deque([whole.a], maxlen=2)
+        delta = timedelta(minutes=15)
+        while queue[-1] < whole.b:
+            queue.append(queue[-1] + delta)
+            yield TimeSpan(*queue)
+
+    def iter_quintminute_time_spans(self):
+        whole = self.expand_to_quarters()
+        queue = collections.deque([whole.a], maxlen=2)
+        delta = timedelta(minutes=5)
+        while queue[-1] < whole.b:
+            queue.append(queue[-1] + delta)
+            yield TimeSpan(*queue)
