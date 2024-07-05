@@ -14,7 +14,7 @@ from typing import NamedTuple
 
 from joker.cast import want_unicode
 
-_sexagesimal_chars = '0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY'
+_sexagesimal_chars = "0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY"
 _sexagesimal_remap = {ic[1]: ic[0] for ic in enumerate(_sexagesimal_chars)}
 
 
@@ -22,21 +22,21 @@ def sexagesimal_format(num, precision=0):
     from joker.cast.numeric import numsys_cast
 
     idigits, fdigits = numsys_cast(num, 60, precision)
-    rs = ''.join(_sexagesimal_chars[i] for i in idigits) or '0'
+    rs = "".join(_sexagesimal_chars[i] for i in idigits) or "0"
 
     if isinstance(num, int) and not precision:
         return rs
-    return rs + '.' + ''.join(_sexagesimal_chars[i] for i in fdigits)
+    return rs + "." + "".join(_sexagesimal_chars[i] for i in fdigits)
 
 
 def sexagesimal_parse(numstr):
     from joker.cast.numeric import numsys_revcast
 
-    if '.' not in numstr:
+    if "." not in numstr:
         digits = [_sexagesimal_remap[c] for c in numstr]
         return numsys_revcast(60, digits, [])
 
-    parts = numstr.split('.', 1)
+    parts = numstr.split(".", 1)
     idigits = [_sexagesimal_remap[c] for c in parts[0]]
     fdigits = [_sexagesimal_remap[c] for c in parts[1]]
     return numsys_revcast(60, idigits, fdigits or [0])
@@ -74,8 +74,8 @@ def _smart_time_parse(s):
     :param s: (str)
     :return:  [seconds, minutes, hours]
     """
-    if ':' in s:
-        parts = [float(x or 0) for x in s.split(':')][:3]
+    if ":" in s:
+        parts = [float(x or 0) for x in s.split(":")][:3]
         parts.reverse()
         # len(parts) must be 2 or 3
         if len(parts) == 2:
@@ -113,7 +113,7 @@ def smart_time_parse_to_seconds(s):
     """
     seconds = 0
     for i, x in enumerate(_smart_time_parse(s)):
-        seconds += x * 60 ** i
+        seconds += x * 60**i
     return seconds
 
 
@@ -126,36 +126,36 @@ def smart_time_parse_to_timedelta(s):
 
 
 def smart_date_parse(s):
-    """  
+    """
     >>> smart_date_parse(0)
-    datetime.date(2017, 5, 5) 
+    datetime.date(2017, 5, 5)
     >>> smart_date_parse('today')
-    datetime.date(2017, 5, 5) 
-    
+    datetime.date(2017, 5, 5)
+
     >>> smart_date_parse(-1)
-    datetime.date(2017, 5, 4) 
+    datetime.date(2017, 5, 4)
     >>> smart_date_parse('yesterday')
     datetime.date(2017, 5, 4)
-    
+
     >>> smart_date_parse(1)
-    datetime.date(2017, 5, 6) 
+    datetime.date(2017, 5, 6)
     >>> smart_date_parse('tomorrow')
-    datetime.date(2017, 5, 6) 
-    
+    datetime.date(2017, 5, 6)
+
     >>> smart_date_parse(datetime.date.today())
-    datetime.date(2017, 5, 5) 
+    datetime.date(2017, 5, 5)
     >>> smart_date_parse(datetime.datetime.now())
-    datetime.date(2017, 5, 5) 
-    
+    datetime.date(2017, 5, 5)
+
     >>> smart_date_parse('20170505')
-    datetime.date(2017, 5, 5) 
+    datetime.date(2017, 5, 5)
     >>> smart_date_parse('2017-05-06')
-    datetime.date(2017, 5, 6) 
+    datetime.date(2017, 5, 6)
     >>> smart_date_parse('05-06')
-    datetime.date(2017, 5, 6) 
+    datetime.date(2017, 5, 6)
     >>> smart_date_parse('0506')
-    datetime.date(2017, 5, 6) 
-    
+    datetime.date(2017, 5, 6)
+
     :param s: a string representing a date
     :return: a datetime.date instance
     """
@@ -171,29 +171,29 @@ def smart_date_parse(s):
         s = want_unicode(s).lower()
     else:
         t = s.__class__.__name__
-        raise TypeError('cannot convert type {} to date'.format(t))
+        raise TypeError("cannot convert type {} to date".format(t))
 
-    if s == 'today':
+    if s == "today":
         return smart_date_parse(0)
-    if s == 'yesterday':
+    if s == "yesterday":
         return smart_date_parse(-1)
-    if s == 'tomorrow':
+    if s == "tomorrow":
         return smart_date_parse(1)
 
-    if re.match(r'\d{8}$', s):
-        return datetime.datetime.strptime(s, '%Y%m%d').date()
+    if re.match(r"\d{8}$", s):
+        return datetime.datetime.strptime(s, "%Y%m%d").date()
 
-    if re.match(r'\d{4}$', s):
-        s = '{}{}'.format(today.year, s)
-        return datetime.datetime.strptime(s, '%Y%m%d').date()
+    if re.match(r"\d{4}$", s):
+        s = "{}{}".format(today.year, s)
+        return datetime.datetime.strptime(s, "%Y%m%d").date()
 
-    if re.match(r'\d{4}-\d{1,2}-\d{1,2}$', s):
-        return datetime.datetime.strptime(s, '%Y-%m-%d').date()
+    if re.match(r"\d{4}-\d{1,2}-\d{1,2}$", s):
+        return datetime.datetime.strptime(s, "%Y-%m-%d").date()
 
-    if re.match(r'\d{1,2}-\d{1,2}$', s):
-        s = '{}-{}'.format(today.year, s)
-        return datetime.datetime.strptime(s, '%Y-%m-%d').date()
-    raise ValueError('unknow date format')
+    if re.match(r"\d{1,2}-\d{1,2}$", s):
+        s = "{}-{}".format(today.year, s)
+        return datetime.datetime.strptime(s, "%Y-%m-%d").date()
+    raise ValueError("unknow date format")
 
 
 easy_date = smart_date_parse
@@ -201,7 +201,7 @@ easy_date = smart_date_parse
 
 def time_format(fmt=None, tm=None):
     if fmt is None:
-        fmt = '%y%m%d-%H%M%S'
+        fmt = "%y%m%d-%H%M%S"
     if tm is None:
         tm = datetime.datetime.now()
     return tm.strftime(fmt)
@@ -213,11 +213,11 @@ def date_range(start, stop=0, step=1):
     [datetime.date(2017, 5, 2),
      datetime.date(2017, 5, 3),
      datetime.date(2017, 5, 4)]
-     
-    :param start: 
-    :param stop: 
-    :param step: 
-    :return: 
+
+    :param start:
+    :param stop:
+    :param step:
+    :return:
     """
     start = smart_date_parse(start)
     stop = smart_date_parse(stop)
@@ -228,21 +228,21 @@ def date_range(start, stop=0, step=1):
 
 
 class Timer:
-    def __init__(self, name: str = '', offset: float = 0.):
+    def __init__(self, name: str = "", offset: float = 0.0):
         self.name = name
         self.started_at = time.time() + offset
         self.entered_at = None
 
     def __repr__(self):
         parts = self.__class__.__name__, repr(self.name), -self.seconds
-        return '{}({}, {})'.format(*parts)
+        return "{}({}, {})".format(*parts)
 
     def __str__(self):
-        tmr = 'Timer {}'.format(self.name).strip()
+        tmr = "Timer {}".format(self.name).strip()
         if self.entered_at is None:
-            return '{}: {}'.format(tmr, self.seconds)
+            return "{}: {}".format(tmr, self.seconds)
         since_entering = round(time.time() - self.entered_at, 3)
-        return '{}: {}, {}'.format(tmr, self.seconds, since_entering)
+        return "{}: {}, {}".format(tmr, self.seconds, since_entering)
 
     def __enter__(self):
         self.entered_at = time.time()
@@ -266,8 +266,8 @@ def timed(func):
 
     @functools.wraps(func)
     def retfunc(*args, **kwargs):
-        name = getattr(func, '__name__', None) or func.__class__.__name__
-        with Timer(name + '()'):
+        name = getattr(func, "__name__", None) or func.__class__.__name__
+        with Timer(name + "()"):
             return func(*args, **kwargs)
 
     return retfunc
@@ -278,7 +278,7 @@ class TimeMachine(object):
         self._initpoint = datetime.datetime.now()
         self._imaginary = not (start or speed)
         self._start = start or self._initpoint
-        self._speed = speed or 1.
+        self._speed = speed or 1.0
 
     def now(self):
         if not self._imaginary:
@@ -289,8 +289,7 @@ class TimeMachine(object):
     @staticmethod
     def convert_time_to_timedelta(t):
         return datetime.timedelta(
-            hours=t.hour, minutes=t.minute, seconds=t.second,
-            microseconds=t.microsecond
+            hours=t.hour, minutes=t.minute, seconds=t.second, microseconds=t.microsecond
         )
 
 
@@ -313,7 +312,7 @@ class TimeSlicer(TimeMachine):
         :return:
         """
         t = time.time()
-        return int(round(t / ts / 60.)) * 60
+        return int(round(t / ts / 60.0)) * 60
 
     def convert_timeslice_to_time(self, ts):
         dt = self.EPOCH + self._ts_delta * ts
@@ -348,7 +347,7 @@ class TimeSlicer(TimeMachine):
 
 
 class Year(object):
-    __slots__ = ['val']
+    __slots__ = ["val"]
 
     def __init__(self, num, trad=True):
         # 0 => 1 AD, 1 => 1 AD, -1 => 1 BC
@@ -358,12 +357,12 @@ class Year(object):
         c = self.__class__.__name__
         v = self.val
         num = self.val - 1 if self.val < 1 else self.val
-        return '{}({})'.format(c, num)
+        return "{}({})".format(c, num)
 
     def __str__(self):
         if self.val > 0:
             return str(self.val)
-        return '{} BC'.format(1 - self.val)
+        return "{} BC".format(1 - self.val)
 
     def __sub__(self, other):
         if isinstance(other, Year):
@@ -376,18 +375,18 @@ class Year(object):
         if isinstance(other, int):
             self.val -= other
             return self
-        raise TypeError('unsupported operation')
+        raise TypeError("unsupported operation")
 
     def __add__(self, other):
         if isinstance(other, int):
             return Year(self.val + other, trad=False)
-        raise TypeError('unsupported operation')
+        raise TypeError("unsupported operation")
 
     def __iadd__(self, other):
         if isinstance(other, int):
             self.val += other
             return self
-        raise TypeError('unsupported operation')
+        raise TypeError("unsupported operation")
 
     def __eq__(self, other):
         return self.val == other.val
@@ -398,14 +397,14 @@ class Year(object):
             return cls(int(s))
         except ValueError:
             pass
-        parts = re.split(r'(\d+)', s)
+        parts = re.split(r"(\d+)", s)
         if parts[0] and parts[-1]:
             raise ValueError("bad format: '{}'".format(s))
         affix = parts[0] or parts[-1]
         affix = affix.strip()
-        if affix.upper() in {'BC', 'B.C.', 'BCE', 'B.C.E.'}:
+        if affix.upper() in {"BC", "B.C.", "BCE", "B.C.E."}:
             return cls(-int(parts[1]))
-        if affix.upper() in {'AD', 'A.D.', 'CE', 'C.E.'}:
+        if affix.upper() in {"AD", "A.D.", "CE", "C.E."}:
             return cls(int(parts[1]))
         raise ValueError("bad token: '{}'".format(affix))
 
@@ -418,7 +417,7 @@ def _n_minutes_floor(n: int, dt: datetime.datetime):
 def _n_minutes_ceil(n: int, dt: datetime.datetime):
     dti = datetime.datetime(dt.year, dt.month, dt.day, dt.hour)
     # minutes can be 60
-    minutes = math.ceil(dt.minute / n + dt.second / 60. / n) * n
+    minutes = math.ceil(dt.minute / n + dt.second / 60.0 / n) * n
     return dti + timedelta(minutes=minutes)
 
 
@@ -445,8 +444,7 @@ class TimeSpan(NamedTuple):
     @classmethod
     def from_timestamps(cls, a: float, b: float):
         return cls(
-            datetime.datetime.fromtimestamp(a),
-            datetime.datetime.fromtimestamp(b)
+            datetime.datetime.fromtimestamp(a), datetime.datetime.fromtimestamp(b)
         )
 
     @property
@@ -459,18 +457,18 @@ class TimeSpan(NamedTuple):
 
     @property
     def as_dict(self):
-        return {'a': self.a, 'b': self.b}
+        return {"a": self.a, "b": self.b}
 
     @property
     def as_json_serializable(self):
         return {
-            'a': self.a.strftime("%Y-%m-%d %H:%M:%S"),
-            'b': self.b.strftime("%Y-%m-%d %H:%M:%S"),
+            "a": self.a.strftime("%Y-%m-%d %H:%M:%S"),
+            "b": self.b.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
     @property
     def as_mongo_filter(self):
-        return {'$gte': self.a, '$lte': self.b}
+        return {"$gte": self.a, "$lte": self.b}
 
     @property
     def as_timestamps(self):
@@ -478,8 +476,8 @@ class TimeSpan(NamedTuple):
 
     def fmt_for_human(self):
         if self.a.date() == self.b.date():
-            return f'{self.a:%Y-%m-%d %H:%M:%S} ~ {self.b:%H:%M:%S}'
-        return f'{self.a:%Y-%m-%d %H:%M:%S} ~ {self.b:%Y-%m-%d %H:%M:%S}'
+            return f"{self.a:%Y-%m-%d %H:%M:%S} ~ {self.b:%H:%M:%S}"
+        return f"{self.a:%Y-%m-%d %H:%M:%S} ~ {self.b:%Y-%m-%d %H:%M:%S}"
 
     def expand(self, a_seconds: int, b_seconds: int = None):
         if b_seconds is None:

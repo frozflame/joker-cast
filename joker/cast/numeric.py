@@ -4,7 +4,7 @@
 
 def numsys_cast(num, base, precision=0):
     if not isinstance(base, int) or base <= 1:
-        raise TypeError('base must be an integer greater than 1')
+        raise TypeError("base must be an integer greater than 1")
 
     integer, fractional = divmod(num, 1)
     integer = int(integer)
@@ -26,12 +26,12 @@ def numsys_cast(num, base, precision=0):
 def numsys_revcast(base, integer_digits, fractional_digits):
     integer = 0
     for ix, digi in enumerate(reversed(integer_digits)):
-        integer += base ** ix * digi
+        integer += base**ix * digi
     if not fractional_digits:
         return integer
-    fractional = 0.
+    fractional = 0.0
     for ix, digi in enumerate(fractional_digits):
-        fractional += (1. / 60) ** (ix + 1) * digi
+        fractional += (1.0 / 60) ** (ix + 1) * digi
     return integer + fractional
 
 
@@ -55,29 +55,29 @@ def grid_align(v, unitsize):
 
 def metric_prefix(number):
     """
-    >>> metric_prefix(10 ** 11) 
+    >>> metric_prefix(10 ** 11)
     (100.0, 'G', 9)
     >>> metric_prefix(.1 ** 5)
     (10.000000000000002, 'u', -6)
-    
-    :param number: 
+
+    :param number:
     :return: (a, prefix, b)
     number = a * (10 ^ b)
     """
-    ix, prefix = 0, ''
+    ix, prefix = 0, ""
     if number >= 1000:
-        for ix, prefix in enumerate('kMGTPEZY'):
-            number /= 1000.
+        for ix, prefix in enumerate("kMGTPEZY"):
+            number /= 1000.0
             if number <= 1000:
                 return number, prefix, 3 * (1 + ix)
         return number, prefix, 3 * (1 + ix)
-    if number <= .001:
-        for ix, prefix in enumerate('munp'):
-            number *= 1000.
+    if number <= 0.001:
+        for ix, prefix in enumerate("munp"):
+            number *= 1000.0
             if number >= 1:
                 return number, prefix, -3 * (1 + ix)
         return number, prefix, -3 * (1 + ix)
-    return number, '', 0
+    return number, "", 0
 
 
 def human_filesize(number):

@@ -13,5 +13,5 @@ def test_circular_string():
         assert len(s) == i
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_circular_string()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+
 def noop(*_, **__):
     pass
 
@@ -34,7 +35,7 @@ def adaptive_call(entry):
     if not items:
         return items
     if not callable(items[0]):
-        raise TypeError('first item of entry must be a callable')
+        raise TypeError("first item of entry must be a callable")
 
     for x in items[1:]:
         if isinstance(x, (list, tuple)):
@@ -42,20 +43,21 @@ def adaptive_call(entry):
         elif isinstance(x, dict):
             kwargs.update(x)
         else:
-            raise TypeError('params must be a tuple, list or dict')
+            raise TypeError("params must be a tuple, list or dict")
     return items[0](*pargs, **kwargs)
 
 
 # TODO: be more general
 def printerr(*args, **kwargs):
     import sys
-    kwargs.setdefault('file', sys.stderr)
+
+    kwargs.setdefault("file", sys.stderr)
     pargs = []
     for a in args:
         if isinstance(a, BaseException):
             pargs.append(a.__class__.__name__)
             pargs.append(str(a))
-            kwargs.setdefault('sep', ': ')
+            kwargs.setdefault("sep", ": ")
         else:
             pargs.append(a)
     print(*pargs, **kwargs)
@@ -69,7 +71,7 @@ def instanciate_with_foolproof(cls):
     """
     The return class can be called again without error
     """
-    if '__call__' not in cls.__dict__:
+    if "__call__" not in cls.__dict__:
         cls.__call__ = lambda x: x
     return cls()
 
@@ -94,8 +96,9 @@ _always_false = ConstantCallable(False)
 
 class Void(object):
     """
-    Act as 0, False, '', [] 
+    Act as 0, False, '', []
     """
+
     __bool__ = _always_false
     __nonzero__ = _always_false
     __add__ = default_func
@@ -114,14 +117,14 @@ class Void(object):
     __le__ = _always_false
     __len__ = ConstantCallable(0)
 
-    def __init__(self, symbol='-'):
+    def __init__(self, symbol="-"):
         self.symbol = symbol
 
     def __str__(self):
         return self.symbol
 
     def __repr__(self):
-        return '{}({})'.format(self.__class__.__name__, repr(self.symbol))
+        return "{}({})".format(self.__class__.__name__, repr(self.symbol))
 
     def __eq__(self, other):
         if isinstance(other, Void):
@@ -129,7 +132,7 @@ class Void(object):
         return False
 
 
-Object = type('Object', (object,), {})
+Object = type("Object", (object,), {})
 
 
 class Universe(object):
@@ -138,7 +141,7 @@ class Universe(object):
 
 
 class Mu(object):
-    __slots__ = ['value']
+    __slots__ = ["value"]
 
     # mutable value
     def __init__(self, value):

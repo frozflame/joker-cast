@@ -31,7 +31,7 @@ def unflatten(obj):
     """
     if isinstance(obj, (tuple, list)):
         return obj
-    return obj,
+    return (obj,)
 
 
 def reusable(records):
@@ -51,10 +51,10 @@ def reusable(records):
 def chunkwize(chunksize, iterable):
     """
     >>> list(chunkwize(5, range(14)))
-    [[0, 1, 2, 3, 4], 
-     [5, 6, 7, 8, 9], 
+    [[0, 1, 2, 3, 4],
+     [5, 6, 7, 8, 9],
      [10, 11, 12, 13]]
-     
+
     :param chunksize: integer
     :param iterable:
     """
@@ -71,7 +71,7 @@ def chunkwize(chunksize, iterable):
 def chunkwize_split(chunksize, sequence):
     n = len(sequence)
     chunksize = chunksize or n
-    return [sequence[i: i + chunksize] for i in range(0, n, chunksize)]
+    return [sequence[i : i + chunksize] for i in range(0, n, chunksize)]
 
 
 def chunkwize_parallel(chunksize, *sequences):
@@ -80,13 +80,13 @@ def chunkwize_parallel(chunksize, *sequences):
     >>> s2 = 'abcdefghijk'
     >>> list(chunkwize_parallel(4, s1, s2))
     [['1234', 'abcd'], ['5678', 'efgh'], ['90', 'ijk']]
-    
+
     :param chunksize: integer
     :param sequences: tuple of strings or lists (must support slicing!)
     """
     chunksize = int(chunksize)
     for i in itertools.count(0):
-        r = [s[i * chunksize:(i + 1) * chunksize] for s in sequences]
+        r = [s[i * chunksize : (i + 1) * chunksize] for s in sequences]
         if any(r):
             yield r
         else:
@@ -137,11 +137,13 @@ def all_combinations(iterable):
     """
     items = list(iterable)
     return itertools.chain.from_iterable(
-        itertools.combinations(items, i) for i in range(1 + len(items)))
+        itertools.combinations(items, i) for i in range(1 + len(items))
+    )
 
 
 def cumsum(nums):
     import operator
+
     return itertools.accumulate(nums, operator.add)
 
 
@@ -150,11 +152,12 @@ def window_sum(wsize, numbers):
     >>> nums = [1, 10, 100, 1000, 10000, 100000]
     >>> list(window_sum(3, nums))
     [111, 1110, 11100, 111000]
-    
+
     :param wsize: integer, size of the moving window
     :param numbers: an iterable of numbers
     """
     import collections
+
     queue = collections.deque(maxlen=wsize)
     for num in numbers:
         queue.append(num)
@@ -168,10 +171,10 @@ def alternate(*iterables, **kwargs):
     >>> ''.join(list(alternate('ABCD', 'abcde')))
     'AaBbCcDde'
     >>> ''.join(list(alternate('ABCD', 'abcde', fill='_')))
-    'AaBbCcDd_e' 
+    'AaBbCcDd_e'
     """
     _void = object()
-    fill = kwargs.get('fill', _void)
+    fill = kwargs.get("fill", _void)
     alt = itertools.chain(*itertools.zip_longest(*iterables, fillvalue=fill))
     for item in alt:
         if item is not _void:
@@ -180,6 +183,7 @@ def alternate(*iterables, **kwargs):
 
 def until_convergent(func, start, n=1000):
     import collections
+
     que = collections.deque([start], maxlen=2)
 
     # allow n = float('inf')
@@ -192,7 +196,7 @@ def until_convergent(func, start, n=1000):
 
 def split(iterable, func):
     """
-    :param iterable: 
+    :param iterable:
     :param func: func(x) => True if x is a header (footer)
     :return: an iterable if 3-tuples: (header, footer, elements)
     """

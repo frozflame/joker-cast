@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
-
-__version__ = '0.5.2'
+__version__ = "0.5.2"
 
 
 def regular_cast(original, *try_funcs):
@@ -73,9 +72,9 @@ def numerify(s):
 
 def want_bytes(s, **kwargs):
     """
-    :param s: 
+    :param s:
     :param kwargs: key word arguments passed to str.encode(..)
-    :return: 
+    :return:
     """
     if not isinstance(s, bytes):
         s = s.encode(**kwargs)
@@ -103,8 +102,8 @@ def represent(obj, params):
     """
     c = obj.__class__.__name__
     if isinstance(params, dict):
-        parts = ('{}={}'.format(k, repr(v)) for k, v in params.items())
+        parts = ("{}={}".format(k, repr(v)) for k, v in params.items())
     else:
-        parts = ('{}={}'.format(k, repr(getattr(obj, k))) for k in params)
-    s = ', '.join(parts)
-    return '<{}({}) at {}>'.format(c, s, hex(id(obj)))
+        parts = ("{}={}".format(k, repr(getattr(obj, k))) for k in params)
+    s = ", ".join(parts)
+    return "<{}({}) at {}>".format(c, s, hex(id(obj)))

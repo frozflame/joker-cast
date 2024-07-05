@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # coding: utf-8
-
 import collections
 import itertools
 import math
@@ -14,7 +13,7 @@ def _is_property(attr):
     if isinstance(attr, property):
         return True
     cn = attr.__class__.__name__
-    if cn == 'cached_property':
+    if cn == "cached_property":
         return True
     return False
 
@@ -45,9 +44,10 @@ class NovelDict(dict):
 class DefaultOrderedDict(collections.OrderedDict):
     # Source: http://stackoverflow.com/a/6190500/562769
     def __init__(self, default_factory=None, *a, **kw):
-        if (default_factory is not None and
-                not isinstance(default_factory, collections.Callable)):
-            raise TypeError('first argument must be a callable')
+        if default_factory is not None and not isinstance(
+            default_factory, collections.Callable
+        ):
+            raise TypeError("first argument must be a callable")
         collections.OrderedDict.__init__(self, *a, **kw)
         self.default_factory = default_factory
 
@@ -67,7 +67,7 @@ class DefaultOrderedDict(collections.OrderedDict):
         if self.default_factory is None:
             args = tuple()
         else:
-            args = self.default_factory,
+            args = (self.default_factory,)
         return type(self), args, None, None, self.items()
 
 
@@ -95,7 +95,7 @@ class _ListWrapper(object):
 
     def __repr__(self):
         c = self.__class__.__name__
-        return '{}({})'.format(c, self._items)
+        return "{}({})".format(c, self._items)
 
 
 class Pool(_ListWrapper):
@@ -105,6 +105,7 @@ class Pool(_ListWrapper):
 
     def shuffle(self):
         import random
+
         random.shuffle(self._items)
         self._cycle = itertools.cycle(self._items)
         return self
@@ -134,7 +135,7 @@ class Circular(_ListWrapper):
         if m >= 0:
             return indexes
         n = len(self._items)
-        shift = math.ceil(-1. * m / n) * n
+        shift = math.ceil(-1.0 * m / n) * n
         shift = int(shift)
 
         new_indexes = []
@@ -153,10 +154,7 @@ class Circular(_ListWrapper):
         assert isinstance(slc, slice)
         if slc.step is None or slc.step >= 0:
             return self.ix_shift(slc.start, slc.stop, slc.step)
-        return self.ix_shift(
-            self.ix_turn(slc.start),
-            self.ix_turn(slc.stop),
-            -slc.step)
+        return self.ix_shift(self.ix_turn(slc.start), self.ix_turn(slc.stop), -slc.step)
 
     def __getitem__(self, key):
         n = len(self._items)
@@ -185,10 +183,10 @@ class CircularString(object):
 
     def __repr__(self):
         c = self.__class__.__name__
-        return '{}({})'.format(c, self._string)
+        return "{}({})".format(c, self._string)
 
     def __getitem__(self, key):
-        return ''.join(list(self._circular[key]))
+        return "".join(list(self._circular[key]))
 
 
 class CircularReferenceError(ValueError):
@@ -204,6 +202,6 @@ class CircularReferenceDetector(object):
 
     def branch(self, ident):
         if ident in self.ancestors:
-            msg = '{} => {}'.format(self.ident, ident)
+            msg = "{} => {}".format(self.ident, ident)
             raise CircularReferenceError(msg)
         return CircularReferenceDetector(ident, self.ident, *self.ancestors)
